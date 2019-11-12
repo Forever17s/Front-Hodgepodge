@@ -26,23 +26,23 @@
 
 ### 模式介绍
 
-- [单例模式](#单例模式)
-- [策略模式](#策略模式)
-- [代理模式](#代理模式)
-- [迭代器模式](#迭代器模式)
-- [发布-订阅模式](#发布-订阅模式)
-- [命令模式](#命令模式)
-- [组合模式](#组合模式)
-- [模块方法模式](#模块方法模式)
-- [享元模式](#享元模式)
-- [职责链模式](#职责链模式)
-- [中介模式](#中介模式)
-- [装饰者模式](#装饰者模式)
-- [状态模式](#状态模式)
-- [适配器模式](#适配器模式)
-- [外观模式](#外观模式)
+- [一、单例模式](#单例模式)
+- [二、策略模式](#策略模式)
+- [三、代理模式](#代理模式)
+- [四、迭代器模式](#迭代器模式)
+- [五、发布-订阅模式](#发布-订阅模式)
+- [六、命令模式](#命令模式)
+- [七、组合模式](#组合模式)
+- [八、模块方法模式](#模块方法模式)
+- [九、享元模式](#享元模式)
+- [十、职责链模式](#职责链模式)
+- [十一、中介模式](#中介模式)
+- [十二、装饰者模式](#装饰者模式)
+- [十三、状态模式](#状态模式)
+- [十四、适配器模式](#适配器模式)
+- [十五、外观模式](#外观模式)
 
-#### 一、单例模式
+#### 单例模式
 
 ##### 1. 定义
 
@@ -105,7 +105,7 @@ SingletonSetHr("hr1").getHr(); // hr1
 SingletonSetHr("hr2").getHr(); // hr1
 ```
 
-#### 二、策略模式
+#### 策略模式
 
 ##### 1. 定义
 
@@ -161,7 +161,13 @@ function getScore(level) {
   return scoreLevel[level] ? scoreLevel[level]() : 0;
 }
 
-console.log(getScore("S"), getScore("A"), getScore("B"), getScore("C"), getScore("D")); // 90 88 86 84 0
+console.log(
+  getScore("S"),
+  getScore("A"),
+  getScore("B"),
+  getScore("C"),
+  getScore("D")
+); // 90 88 86 84 0
 ```
 
 在组合业务规则方面，比较经典的是表单的验证方法。这里列出比较关键的部分
@@ -248,4 +254,188 @@ validate.add(testTel("12345"), "minLength:5", "最少5位");
 var ret = validate.start();
 
 console.log(ret);
+```
+
+#### 代理模式
+
+##### 1. 定义
+
+为一个对象提供一个代用品或占位符，以便控制对它的访问
+
+##### 2. 核心
+
+当用户不方便直接访问一个对象或者不满足需要的时候，提供一个替身对象来控制对这个对象的访问，客户实际上是对替身对象的访问，替身对象对请求作出一些处理之后，再把请求转交给本体对象
+
+##### 3. 实现
+
+代理模式主要有三种：`保护代理`、`虚拟代理`、`缓存代理`
+
+保护代理主要实现了访问主体的限制行为，以过滤字符作为简单例子
+
+```javascript
+// 主体，发送消息
+function sendMsg(msg) {
+  console.log(msg);
+}
+
+// 代理，对消息进行过滤
+function proxySendMsg(msg) {
+  // 无消息则直接返回
+  if (typeof msg === "undefined") {
+    console.log("deny");
+    return;
+  }
+
+  // 有消息则进行过滤
+  msg = ("" + msg).replace(/泥\s*煤/g, "");
+
+  sendMsg(msg);
+}
+
+sendMsg("泥煤呀泥 煤呀"); // 泥煤呀泥 煤呀
+proxySendMsg("泥煤呀泥 煤"); // 呀
+proxySendMsg(); // deny
+```
+
+它的意图很明显，在访问主题之前进行控制，没有消息的时候直接在代理中返回，或拒绝访问主体。有消息的时候对敏感字符进行了处理，这属于虚拟代理的模式
+
+虚拟代理在控制对主体的访问时，加入了一些额外的操作。在浏览器滚动事件触发的时候，我们通常引入的[函数节流](https://github.com/lodash/lodash/blob/master/debounce.js)就是一种虚拟代理的实现
+
+```javascript
+// 函数防抖，频繁操作中不处理，直到操作完成之后（再过 delay 的时间）才一次性处理
+function debounce(fn, delay) {
+  delay = delay || 200;
+
+  var timer = null;
+
+  return function() {
+    var arg = arguments;
+
+    // 每次操作时，清除上次的定时器
+    clearTimeout(timer);
+    timer = null;
+
+    // 定义新的定时器，一段时间后进行操作
+    timer = setTimeout(function() {
+      fn.apply(this, arg);
+    }, delay);
+  };
+}
+
+var count = 0;
+
+// 主体
+function scrollHandle(e) {
+  console.log(e.type, ++count); // scroll
+}
+
+// 代理
+var proxyScrollHandle = (function() {
+  return debounce(scrollHandle, 500);
+})();
+
+window.onscroll = proxyScrollHandle;
+```
+
+缓存代理可以为一些开销大的算法结果提供暂时的缓存，提升效率。React 的常用依赖[memoize-one](https://github.com/alexreardon/memoize-one)就是个典型的例子
+
+还是举个简单的例子，缓存加法
+
+```javascript
+// 主体
+function add() {
+  var arg = [].slice.call(arguments);
+
+  return arg.reduce(function(a, b) {
+    return a + b;
+  });
+}
+
+// 代理
+var proxyAdd = (function() {
+  var cache = [];
+
+  return function() {
+    var arg = [].slice.call(arguments).join(",");
+
+    // 如果有，则直接从缓存返回
+    if (cache[arg]) {
+      return cache[arg];
+    } else {
+      var ret = add.apply(this, arguments);
+      return ret;
+    }
+  };
+})();
+
+console.log(
+  add(1, 2, 3, 4),
+  add(1, 2, 3, 4),
+
+  proxyAdd(10, 20, 30, 40),
+  proxyAdd(10, 20, 30, 40)
+); // 10 10 100 100
+```
+
+#### 迭代器模式
+
+##### 1. 定义
+
+迭代器模式是指提供一种方法顺序访问一个聚合对象中的各个元素，而又不需要暴露该对象的内部表示
+
+##### 2. 核心
+
+在使用迭代器模式之后，即使不关心对象的内部构造，也可以按顺序访问其中的每个元素
+
+##### 3. 实现
+
+ES5 数组的 map 方式`forEach`已经内置了迭代器
+
+```javascript
+[1, 2, 3].forEach(function(item, index, arr) {
+  console.log(item, index, arr);
+});
+```
+
+类似的遍历方式还有`map`、`filter`、`some`、`every`、`reduce`、`reduceRight`
+
+不过对于对象的遍历，往往不能同数组一样，我们可以封装一下
+
+```javascript
+function each(obj, cb) {
+  var value;
+
+  if (Array.isArray(obj)) {
+    for (var i = 0; i < obj.length; ++i) {
+      value = cb.call(obj[i], i, obj[i]);
+
+      if (value === false) {
+        break;
+      }
+    }
+  } else {
+    for (var i in obj) {
+      value = cb.call(obj[i], i, obj[i]);
+
+      if (value === false) {
+        break;
+      }
+    }
+  }
+}
+
+each([1, 2, 3], function(index, value) {
+  console.log(index, value);
+});
+
+each({ a: 1, b: 2 }, function(index, value) {
+  console.log(index, value);
+});
+
+// 0 1
+// 1 2
+// 2 3
+
+// a 1
+// b 2
 ```
