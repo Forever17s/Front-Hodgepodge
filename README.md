@@ -161,13 +161,7 @@ function getScore(level) {
   return scoreLevel[level] ? scoreLevel[level]() : 0;
 }
 
-console.log(
-  getScore("S"),
-  getScore("A"),
-  getScore("B"),
-  getScore("C"),
-  getScore("D")
-); // 90 88 86 84 0
+console.log(getScore("S"), getScore("A"), getScore("B"), getScore("C"), getScore("D")); // 90 88 86 84 0
 ```
 
 在组合业务规则方面，比较经典的是表单的验证方法。这里列出比较关键的部分
@@ -594,3 +588,338 @@ observer.publish("job", ["前端", "后端", "测试"]); // 输出B的岗位
     创建订阅者本身要消耗一定的时间和内存，订阅的处理函数不一定会被执行，驻留内存有性能开销
 
     弱化了对象之间的联系，复杂情况下可能导致程序难以跟踪维护和理解
+
+#### 命令模式
+
+##### 1. 定义
+
+用一种松耦合的方式来设计程序，使得请求发送者和请求接收者能够消除彼此之间的耦合关系。命令（command）指的是一个执行某些特定事情的指令
+
+##### 2. 核心
+
+命令中带有 execute `执行` 、undo `撤销` 、redo `重做` 等相关命令方法，建议显示地指示这些方法名
+
+##### 3. 实现
+
+下来的例子是一个自增命令，提供执行、撤销、重做功能。采用对象创建处理的方式，定义这个自增
+
+```javascript
+// 自增
+function IncrementCommand() {
+  // 当前值
+  this.val = 0;
+  // 命令栈
+  this.stack = [];
+  // 栈指针位置
+  this.stackPosition = -1;
+}
+
+IncrementCommand.prototype = {
+  constructor: IncrementCommand,
+
+  // 执行
+  execute: function() {
+    this._clearRedo();
+
+    // 定义执行的处理
+    var command = function() {
+      this.val += 10;
+    }.bind(this);
+
+    // 执行并缓存起来
+    command();
+
+    this.stack.push(command);
+
+    this.stackPosition++;
+
+    this.getValue();
+  },
+
+  canUndo: function() {
+    return this.stackPosition >= 0;
+  },
+
+  canRedo: function() {
+    return this.stackPosition < this.stack.length - 1;
+  },
+
+  // 撤销
+  undo: function() {
+    if (!this.canUndo()) {
+      return;
+    }
+
+    this.stackPosition--;
+
+    // 命令的撤销，与执行的处理相反
+    var command = function() {
+      this.val -= 10;
+    }.bind(this);
+
+    // 撤销后不需要缓存
+    command();
+
+    this.getValue();
+  },
+
+  // 重做
+  redo: function() {
+    if (!this.canRedo()) {
+      return;
+    }
+
+    // 执行栈顶的命令
+    this.stack[++this.stackPosition]();
+
+    this.getValue();
+  },
+
+  // 在执行时，已经撤销的部分不能再重做
+  _clearRedo: function() {
+    this.stack = this.stack.slice(0, this.stackPosition + 1);
+  },
+
+  // 获取当前值
+  getValue: function() {
+    console.log(this.val);
+  }
+};
+```
+
+再实例化进行测试，模拟执行、撤销、重做操作
+
+```javascript
+var incrementCommand = new IncrementCommand();
+
+// 模拟事件触发，执行命令
+var eventTrigger = {
+  // 某个事件的处理中，直接调用命令的处理方法
+  increment: function() {
+    incrementCommand.execute();
+  },
+
+  incrementUndo: function() {
+    incrementCommand.undo();
+  },
+
+  incrementRedo: function() {
+    incrementCommand.redo();
+  }
+};
+
+eventTrigger["increment"](); // 10
+eventTrigger["increment"](); // 20
+
+eventTrigger["incrementUndo"](); // 10
+
+eventTrigger["increment"](); // 20
+
+eventTrigger["incrementUndo"](); // 10
+eventTrigger["incrementUndo"](); // 0
+eventTrigger["incrementUndo"](); // 无输出
+
+eventTrigger["incrementRedo"](); // 10
+eventTrigger["incrementRedo"](); // 20
+eventTrigger["incrementRedo"](); // 无输出
+
+eventTrigger["increment"](); // 30
+```
+
+此外，还可以实现简单的宏命令
+
+```javascript
+var MacroCommand = {
+  commands: [],
+
+  add: function(command) {
+    this.commands.push(command);
+
+    return this;
+  },
+
+  remove: function(command) {
+    if (!command) {
+      this.commands = [];
+      return;
+    }
+
+    for (var i = 0; i < this.commands.length; ++i) {
+      if (this.commands[i] === command) {
+        this.commands.splice(i, 1);
+      }
+    }
+  },
+
+  execute: function() {
+    for (var i = 0; i < this.commands.length; ++i) {
+      this.commands[i].execute();
+    }
+  }
+};
+
+var showTime = {
+  execute: function() {
+    console.log("time");
+  }
+};
+
+var showName = {
+  execute: function() {
+    console.log("name");
+  }
+};
+
+var showAge = {
+  execute: function() {
+    console.log("age");
+  }
+};
+
+MacroCommand.add(showTime)
+  .add(showName)
+  .add(showAge);
+
+MacroCommand.remove(showName);
+
+MacroCommand.execute(); // time age
+```
+
+#### 组合模式
+
+##### 1. 定义
+
+是用小的 <abbr title="叶子节点">子对象</abbr> 来构建更大的对象，而这些小的子对象本身也许是由更小的 <abbr title="叶子节点">孙对象</abbr> 构成的。
+
+##### 2. 核心
+
+可以用树形结构来表示这种 `部分 - 整体` 的层次结构。调用组合对象的`execute`方法，程序会递归调用组合对象下面的叶对象的`execute`方法
+
+<div align=center>
+
+![](./resource/design_combination.png)
+
+</div>
+
+但要注意的是，组合模式不是父子关系，它是一种`HAS-A（聚合`的关系，将请求委托给它所包含的所有叶对象。基于这种委托，就需要保证组合对象和叶对象拥有相同的接口
+
+此外，也要保证用一致的方式对待 列表中的每个叶对象，即叶对象属于同一类，不需要过多特殊的额外操作
+
+##### 3. 实现
+
+使用组合模式来实现扫描文件夹中的文件
+
+```javascript
+// 文件夹 组合对象
+function Folder(name) {
+  this.name = name;
+  this.parent = null;
+  this.files = [];
+}
+
+Folder.prototype = {
+  constructor: Folder,
+
+  add: function(file) {
+    file.parent = this;
+    this.files.push(file);
+
+    return this;
+  },
+
+  scan: function() {
+    // 委托给叶对象处理
+    for (var i = 0; i < this.files.length; ++i) {
+      this.files[i].scan();
+    }
+  },
+
+  remove: function(file) {
+    if (typeof file === "undefined") {
+      this.files = [];
+      return;
+    }
+    for (var i = 0; i < this.files.length; ++i) {
+      if (this.files[i] === file) {
+        this.files.splice(i, 1);
+      }
+    }
+  }
+};
+
+// 文件 叶对象
+function File(name) {
+  this.name = name;
+  this.parent = null;
+}
+
+File.prototype = {
+  constructor: File,
+
+  add: function() {
+    console.log("文件里面不能添加文件");
+  },
+
+  scan: function() {
+    var name = [this.name];
+    var parent = this.parent;
+    while (parent) {
+      name.unshift(parent.name);
+      parent = parent.parent;
+    }
+    console.log(name.join(" / "));
+  }
+};
+```
+
+构造好组合对象与叶对象的关系后，实例化，在组合对象中插入组合或叶对象
+
+```javascript
+var web = new Folder("Web");
+var fe = new Folder("前端");
+var css = new Folder("CSS");
+var js = new Folder("js");
+var rd = new Folder("后端");
+
+web.add(fe).add(rd);
+
+var file1 = new File("HTML权威指南.pdf");
+var file2 = new File("CSS权威指南.pdf");
+var file3 = new File("JavaScript权威指南.pdf");
+var file4 = new File("MySQL基础.pdf");
+var file5 = new File("Web安全.pdf");
+var file6 = new File("Linux菜鸟.pdf");
+
+css.add(file2);
+
+fe.add(file1)
+  .add(file3)
+  .add(css)
+  .add(js);
+
+rd.add(file4).add(file5);
+
+web.add(file6);
+
+rd.remove(file4);
+
+// 进行扫描
+web.scan();
+/**
+ * Web / 前端 / HTML权威指南.pdf
+ * Web / 前端 / JavaScript权威指南.pdf
+ * Web / 前端 / CSS / CSS权威指南.pdf
+ * Web / 后端 / Web安全.pdf
+ * Web / Linux菜鸟.pdf
+ */
+```
+
+##### 4. 优缺点
+
+###### 优点：
+
+    可以方便的构造一棵树来表示对象的部分-整体结构。在数的构造完成后，只需要通过请求树的最顶层对象，就能对整棵树做统一一致的操作
+
+###### 缺点：
+
+    创建出来的对象长得都差不多，可能会使代码不好理解，创建大量对象会消耗内存，对性能造成影响
