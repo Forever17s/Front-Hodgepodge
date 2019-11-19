@@ -923,3 +923,217 @@ web.scan();
 ###### 缺点：
 
     创建出来的对象长得都差不多，可能会使代码不好理解，创建大量对象会消耗内存，对性能造成影响
+
+#### 模板方法模式
+
+##### 1. 定义
+
+模板方法模式由两部分结构组成：`抽象父类` 和 `实现子类`
+
+##### 2. 核心
+
+在抽象父类中封装子类的算法框架，它的`主方法`可作为一个算法的模板，指导子类以何种顺序去执行哪些方法。由父类分离出公共部分，要求子类重写某些父类的（易变化的）抽象方法
+
+##### 3. 实现
+
+模板方法模式一般的实现方式为`继承`。以运动作为例子，运动有比较通用的一些处理，这部分可以抽离开来，在父类中实现。具体某项运动的特殊性则有自类来重写实现。最终子类直接调用父类的模板函数来执行
+
+```javascript
+// 体育运动
+function Sport() {}
+
+Sport.prototype = {
+  constructor: Sport,
+
+  // 主方法，按顺序执行
+  init: function() {
+    this.stretch();
+    this.jog();
+    this.deepBreath();
+    this.start();
+
+    var free = this.end();
+
+    // 运动后还有空的话，就拉伸一下
+    if (free !== false) {
+      this.stretch();
+    }
+  },
+
+  // 拉伸
+  stretch: function() {
+    console.log("拉伸");
+  },
+
+  // 慢跑
+  jog: function() {
+    console.log("慢跑");
+  },
+
+  // 深呼吸
+  deepBreath: function() {
+    console.log("深呼吸");
+  },
+
+  // 开始运动,强制重写
+  start: function() {
+    throw new Error("子类必须重写此方法");
+  },
+
+  // 结束运动
+  end: function() {
+    console.log("运动结束");
+  }
+};
+
+// 篮球
+function Basketball() {}
+
+Basketball.prototype = new Sport();
+
+// 重写相关的方法
+Basketball.prototype.start = function() {
+  console.log("先投上几个三分");
+};
+
+Basketball.prototype.end = function() {
+  console.log("运动结束了，有事先走一步");
+  return false;
+};
+
+// 马拉松
+function Marathon() {}
+
+Marathon.prototype = new Sport();
+
+var basketball = new Basketball();
+var marathon = new Marathon();
+
+// 子类调用，最终会按照父类定义的顺序执行
+basketball.init();
+
+marathon.init();
+/**
+ * 拉伸
+ * 慢跑
+ * 深呼吸
+ * 先投上几个三分
+ * 运动结束了，有事先走一步
+ * 拉伸
+ * 慢跑
+ * 深呼吸
+ * Error: 子类必须重写此方法
+ */
+```
+
+#### 组合模式
+
+##### 1. 定义
+
+享元模式是一种用于性能优化的模式，它的目标是尽量减少共享对象的数量
+
+##### 2. 核心
+
+运用共享技术来有效支持大量细粒度的对象。强调将对象的属性划分为 `内部状态` 与 `外部状态` 。内部状态用于对象的共享，通常不变；而外部状态则剥离开来，由具体的场景决定。
+
+##### 3. 实现
+
+某商家有 50 种男款内衣和 50 种款女款内衣, 要展示它们
+
+方案一: 造 50 个塑料男模和 50 个塑料女模, 让他们穿上展示, 代码如下:
+
+```javascript
+const Model = function(gender, underwear) {
+  this.gender = gender;
+  this.underwear = underwear;
+};
+Model.prototype.takephoto = function() {
+  console.log(`${this.gender}穿着${this.underwear}`);
+};
+for (let i = 1; i < 51; i++) {
+  const maleModel = new Model("male", `第${i}款衣服`);
+  maleModel.takephoto();
+}
+for (let i = 1; i < 51; i++) {
+  const female = new Model("female", `第${i}款衣服`);
+  female.takephoto();
+}
+```
+
+方案二: 造 1 个塑料男模特 1 个塑料女模特, 分别试穿 50 款内衣
+
+```javascript
+const Model = function(gender) {
+  this.gender = gender;
+};
+Model.prototype.takephoto = function() {
+  console.log(`${this.gender}穿着${this.underwear}`);
+};
+const maleModel = new Model("male");
+const femaleModel = new Model("female");
+for (let i = 1; i < 51; i++) {
+  maleModel.underwear = `第${i}款衣服`;
+  maleModel.takephoto();
+}
+for (let i = 1; i < 51; i++) {
+  femaleModel.underwear = `第${i}款衣服`;
+  femaleModel.takephoto();
+}
+```
+
+对比发现: 方案一创建了 100 个对象, 方案二只创建了 2 个对象, 在上面示例中, `gender`(性别) 是内部对象, `underwear`(穿着) 是外部对象。
+
+当然在方案二的中, 还可以进一步改善:
+
+> 1 一开始就通过构造函数显示地创建实例, 可用工场模式将其升级成可控生成
+> 2 在实例上手动添加 `underwear` 不是很优雅, 可以在外部单独在写个 `manager` 函数
+
+```javascript
+const Model = function(gender) {
+  this.gender = gender;
+};
+
+Model.prototype.takephoto = function() {
+  console.log(`${this.gender}穿着${this.underwear}`);
+};
+
+const modelFactory = (function() {
+  // 优化第一点
+  const modelGender = {};
+  return {
+    createModel: function(gender) {
+      if (modelGender[gender]) {
+        return modelGender[gender];
+      }
+      return (modelGender[gender] = new Model(gender));
+    }
+  };
+})();
+
+const modelManager = (function() {
+  const modelObj = {};
+  return {
+    add: function(gender, i) {
+      modelObj[i] = {
+        underwear: `第${i}款衣服`
+      };
+      return modelFactory.createModel(gender);
+    },
+    copy: function(model, i) {
+      // 优化第二点
+      model.underwear = modelObj[i].underwear;
+    }
+  };
+})();
+
+for (let i = 1; i < 51; i++) {
+  const maleModel = modelManager.add("male", i);
+  modelManager.copy(maleModel, i);
+  maleModel.takephoto();
+}
+for (let i = 1; i < 51; i++) {
+  const femaleModel = modelManager.add("female", i);
+  modelManager.copy(femaleModel, i);
+  femaleModel.takephoto();
+}
+```
