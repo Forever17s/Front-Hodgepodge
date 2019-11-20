@@ -924,7 +924,7 @@ web.scan();
 
     创建出来的对象长得都差不多，可能会使代码不好理解，创建大量对象会消耗内存，对性能造成影响
 
-#### 模板方法模式
+#### 模块方法模式
 
 ##### 1. 定义
 
@@ -1026,7 +1026,7 @@ marathon.init();
  */
 ```
 
-#### 组合模式
+#### 享元模式
 
 ##### 1. 定义
 
@@ -1086,6 +1086,7 @@ for (let i = 1; i < 51; i++) {
 当然在方案二的中, 还可以进一步改善:
 
 > 1 一开始就通过构造函数显示地创建实例, 可用工场模式将其升级成可控生成
+
 > 2 在实例上手动添加 `underwear` 不是很优雅, 可以在外部单独在写个 `manager` 函数
 
 ```javascript
@@ -1136,4 +1137,128 @@ for (let i = 1; i < 51; i++) {
   modelManager.copy(femaleModel, i);
   femaleModel.takephoto();
 }
+```
+
+#### 职责链模式
+
+##### 1. 定义
+
+使多个对象都有机会处理请求，从而避免请求的发送者和接受者之间的耦合关系，将这些对象连成一条链，并沿着这条链传递该请求，直到有一个对象处理它为止
+
+##### 2. 核心
+
+请求发送者只需要知道链中第一个节点，弱化发送者和一组接受者之间的强联系，可以便捷地在职责链中增加或删除一个节点，同样，指定谁是第一个节点也很便捷
+
+##### 3. 实现
+
+设置一条职责链，实际上是为了免去多重难以维护和阅读的`if`条件分支，以下面小学生请假流程为例
+
+> 设计小学的请假流程是学生要提交请假申请给自己的老师，5 天以下的假期老师可以直接批准，以上的不超过 8 天的需要教导处批准，时间再长的需要校长亲自审批。
+
+这个例子中：请求发送者只需要知道链中的第一个节点，从而弱化了发送者和一组接收者之间的强联系。如果不使用职责链模式，那么就得需要先搞清谁能处理学生的请假，才能去找到他完成请假申请
+
+```javascript
+// 定义链的某一项，请求在对象之间传递，避免请求的发送者与接收者的耦合关系
+class Leader {
+  constructor() {}
+  // 模拟抽象方法
+  approval() {
+    throw new Error("请添加该阶段处理人");
+  }
+  // 下一节点
+  setNext(nextLeader) {
+    this.nextLeader = nextLeader;
+    return nextLeader;
+  }
+  // 转到链的下一项执行
+  toNext() {
+    if (this.nextLeader) {
+      this.nextLeader.approval(...arguments);
+    } else {
+      const [days, person] = arguments;
+      console.log(`请假人:${person.name}, 请假：${days}天, 暂无承接人`);
+    }
+  }
+}
+
+class Teacher extends Leader {
+  approval(days, person) {
+    if (days < 5) {
+      console.log(`请假人:${person.name}，请假：${days}天, 老师已审批`);
+    } else {
+      this.toNext(days, person);
+    }
+  }
+}
+
+class GuidanceDepartment extends Leader {
+  approval(days, person) {
+    if (5 <= days && days < 8) {
+      console.log(`请假人:${person.name}, 请假：${days}天, 教务处已审批`);
+    } else {
+      this.toNext(days, person);
+    }
+  }
+}
+
+class HeadMaster extends Leader {
+  approval(days, person) {
+    if (8 <= days && days < 20) {
+      console.log(`请假人:${person.name}, 请假：${days}天, 校长已审批`);
+    } else {
+      this.toNext(days, person);
+    }
+  }
+}
+
+var teacher = new Teacher();
+var guidanceDepartment = new GuidanceDepartment();
+var headMaster = new HeadMaster();
+// 设置teacher下一责任链
+teacher.setNext(guidanceDepartment).setNext(headMaster);
+teacher.approval(2, {
+  name: "小红"
+});
+teacher.approval(6, {
+  name: "小王"
+});
+teacher.approval(10, {
+  name: "小明"
+});
+teacher.approval(30, {
+  name: "小李"
+});
+/**
+ * 请假人:小红，请假：2天, 老师已审批
+ * 请假人:小朱, 请假：5天, 教务处已审批
+ * 请假人:小王, 请假：6天, 教务处已审批
+ * 请假人:小明, 请假：10天, 校长已审批
+ * 请假人:小李, 请假：30天, 暂无承接人
+ */
+```
+
+如果再需要添加一条职责链处理额外需求，则设立完成之后改变职责链的构成就可以
+
+```javascript
+class BureauEducation extends Leader {
+  approval(days, person) {
+    if (20 <= days) {
+      console.log(`请假人:${person.name}, 请假：${days}天, 请带领家长办理休学手续`);
+    } else {
+      this.toNext(days, person);
+    }
+  }
+}
+
+var bureauEducation = new BureauEducation();
+// 设置teacher下一责任链
+teacher
+  .setNext(guidanceDepartment)
+  .setNext(headMaster)
+  .setNext(bureauEducation);
+
+/**
+ * ...
+ * 请假人:小李, 请假：30天, 请带领家长办理休学手续
+ */
 ```
