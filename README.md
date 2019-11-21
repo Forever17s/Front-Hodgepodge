@@ -1,10 +1,27 @@
-<h2 align="center">
-前端杂烩，记录我脱离低级趣味的点点滴滴
-</h2>
+<div align="center">
+  
+  ## :paw_prints: 前端杂烩，记录我脱离低级趣味的点点滴滴
+
+  <img src="./resource/design_header.png" width="320" />
+
+  <div
+    style="
+        font-size: 30px; 
+        position: fixed;
+        right: 8px;
+        bottom: 0px;
+        z-index: 1;"
+    right="30"
+  >
+
+[:top:](#设计模式)
+
+  </div>
+</div>
 
 ## 设计模式
 
-在程序设计中有很多使用的设计模式，而其中大部分语言的实现都是基于"类"
+在程序设计中有很多使用的设计模式，而其中大部分语言的实现都是基于 `类`
 
 ### 设计原则
 
@@ -36,7 +53,7 @@
 - [八、模块方法模式](#模块方法模式)
 - [九、享元模式](#享元模式)
 - [十、职责链模式](#职责链模式)
-- [十一、中介模式](#中介模式)
+- [十一、中介者模式](#中介者模式)
 - [十二、装饰者模式](#装饰者模式)
 - [十三、状态模式](#状态模式)
 - [十四、适配器模式](#适配器模式)
@@ -104,6 +121,12 @@ var SingletonSetHr = getSingleton(function(hr) {
 SingletonSetHr("hr1").getHr(); // hr1
 SingletonSetHr("hr2").getHr(); // hr1
 ```
+
+<div align="right">
+
+[:top:](#模式介绍)
+
+</div>
 
 #### 策略模式
 
@@ -793,7 +816,7 @@ MacroCommand.execute(); // time age
 
 ##### 2. 核心
 
-可以用树形结构来表示这种 `部分 - 整体` 的层次结构。调用组合对象的`execute`方法，程序会递归调用组合对象下面的叶对象的`execute`方法
+可以用树形结构来表示这种 `部分 - 整体` 的层次结构。调用组合对象的`执行`方法，程序会递归调用组合对象下面的叶对象的`执行`方法
 
 <div align=center>
 
@@ -801,7 +824,7 @@ MacroCommand.execute(); // time age
 
 </div>
 
-但要注意的是，组合模式不是父子关系，它是一种`HAS-A（聚合`的关系，将请求委托给它所包含的所有叶对象。基于这种委托，就需要保证组合对象和叶对象拥有相同的接口
+但要注意的是，组合模式不是父子关系，它是一种`HAS-A（聚合)`的关系，将请求委托给它所包含的所有叶对象。基于这种委托，就需要保证组合对象和叶对象拥有相同的接口
 
 此外，也要保证用一致的方式对待 列表中的每个叶对象，即叶对象属于同一类，不需要过多特殊的额外操作
 
@@ -1231,7 +1254,6 @@ teacher.approval(30, {
 /**
  * 请假人:小红，请假：2天, 老师已审批
  * 请假人:小朱, 请假：5天, 教务处已审批
- * 请假人:小王, 请假：6天, 教务处已审批
  * 请假人:小明, 请假：10天, 校长已审批
  * 请假人:小李, 请假：30天, 暂无承接人
  */
@@ -1261,4 +1283,83 @@ teacher
  * ...
  * 请假人:小李, 请假：30天, 请带领家长办理休学手续
  */
+```
+
+#### 中介者模式
+
+##### 1. 定义
+
+所有的相关对象都通过`中介者`对象来通信，而不是互相引用，所以当一个对象发生改变时，只需要通知`中介者`对象即可
+
+##### 2. 核心
+
+<div align=center>
+
+![](./resource/design_intermediary.png)
+
+</div>
+
+复杂的调度处理交给`中介者`，使网状的`多对多`关系变成了相对简单的`一对一`关系
+
+##### 3. 实现
+
+多个对象，指的不一定是实例化的对象，也可以将其理解成互为独立的多个项。当这些项在处理时，需要知晓并通过其它项的数据来处理。如果每个项都直接处理，程序会非常复杂，修改某个地方就得在多个项内部修改。我们将这个处理过程抽离出来，封装成`中介者`来处理，各项需要处理时，通知`中介者`即可
+
+```javascript
+var A = {
+  score: 10,
+
+  changeTo: function(score) {
+    this.score = score;
+
+    // 自己获取
+    this.getRank();
+  },
+
+  // 直接获取
+  getRank: function() {
+    var scores = [this.score, B.score, C.score].sort(function(a, b) {
+      return a < b;
+    });
+
+    console.log(scores.indexOf(this.score) + 1);
+  }
+};
+
+var B = {
+  score: 20,
+
+  changeTo: function(score) {
+    this.score = score;
+
+    // 通过中介者获取
+    rankMediator(B);
+  }
+};
+
+var C = {
+  score: 30,
+
+  changeTo: function(score) {
+    this.score = score;
+
+    rankMediator(C);
+  }
+};
+
+// 中介者，计算排名
+function rankMediator(person) {
+  var scores = [A.score, B.score, C.score].sort(function(a, b) {
+    return a < b;
+  });
+
+  console.log(scores.indexOf(person.score) + 1);
+}
+
+// A通过自身来处理
+A.changeTo(100); // 1
+
+// B和C交由中介者处理
+B.changeTo(200); // 1
+C.changeTo(50); // 3
 ```
