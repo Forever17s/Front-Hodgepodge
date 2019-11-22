@@ -2,21 +2,8 @@
   
   ## :paw_prints: 前端杂烩，记录我脱离低级趣味的点点滴滴
 
-  <img src="./resource/design_header.png" width="320" />
+  <img src="./resource/design_header.png" width="500" />
 
-  <div
-    style="
-        font-size: 30px; 
-        position: fixed;
-        right: 8px;
-        bottom: 0px;
-        z-index: 1;"
-    right="30"
-  >
-
-[:top:](#设计模式)
-
-  </div>
 </div>
 
 ## 设计模式
@@ -121,12 +108,6 @@ var SingletonSetHr = getSingleton(function(hr) {
 SingletonSetHr("hr1").getHr(); // hr1
 SingletonSetHr("hr2").getHr(); // hr1
 ```
-
-<div align="right">
-
-[:top:](#模式介绍)
-
-</div>
 
 #### 策略模式
 
@@ -1362,4 +1343,91 @@ A.changeTo(100); // 1
 // B和C交由中介者处理
 B.changeTo(200); // 1
 C.changeTo(50); // 3
+```
+
+#### 装饰器模式
+
+##### 1. 定义
+
+装饰器模式（Decorator Pattern）允许向一个现有的对象添加新的功能，同时又不改变其结构。这种类型的设计模式属于结构型模式，它是作为现有的类的一个包装。
+
+##### 2. 核心
+
+这种模式创建了一个装饰类，用来包装原有的类，并在保持类方法签名完整性的前提下，提供了额外的功能
+
+##### 3. 实现
+
+> JS 中的`Decorator`在原理和功能上简单明了，简而言之就是对对象进行包装，返回一个新的对象描述（descriptor）。这个概念其实和 React 中的 [高阶组件](https://react.docschina.org/docs/higher-order-components.html) 也类似，大家可以用高阶组件的方式来理解它。
+
+最简单的装饰者，就是重写对象的属性.使用传统面向对象的方法来实现装饰，添加技能
+
+```javascript
+function Person() {}
+
+Person.prototype.skill = function() {
+  console.log("数学");
+};
+
+// 装饰器，还会音乐
+function MusicDecorator(person) {
+  this.person = person;
+}
+
+MusicDecorator.prototype.skill = function() {
+  this.person.skill();
+  console.log("音乐");
+};
+
+// 装饰器，还会跑步
+function RunDecorator(person) {
+  this.person = person;
+}
+
+RunDecorator.prototype.skill = function() {
+  this.person.skill();
+  console.log("跑步");
+};
+
+var person = new Person();
+
+// 装饰一下
+var decoratorPerson;
+decoratorPerson = new MusicDecorator(person);
+decoratorPerson = new RunDecorator(decoratorPerson);
+
+person.skill(); // 数学
+decoratorPerson.skill(); // 数学 音乐 跑步
+```
+
+在 JS 中，函数为一等对象，所以我们也可以使用更通用的装饰函数
+
+```javascript
+// 装饰器，在当前函数执行前先执行另一个函数
+function decoratorBefore(fn, beforeFn) {
+  return function() {
+    var ret = beforeFn.apply(this, arguments);
+
+    // 在前一个函数中判断，不需要执行当前函数
+    if (ret !== false) {
+      fn.apply(this, arguments);
+    }
+  };
+}
+
+function skill() {
+  console.log("数学");
+}
+
+function skillMusic() {
+  console.log("音乐");
+}
+
+function skillRun() {
+  console.log("跑步");
+}
+
+var skillDecorator = decoratorBefore(skill, skillMusic);
+skillDecorator = decoratorBefore(skillDecorator, skillRun);
+
+skillDecorator(); // 跑步 音乐 数学
 ```
