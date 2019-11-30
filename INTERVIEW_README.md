@@ -438,7 +438,7 @@ target; // {a:1, b:2, c:3}
 - 自动转化 `json` 数据
 - 客户端支持抵御 `XSRF`（跨站请求伪造）
 
-##### vue 生命周期和钩子函数 [:cyclone:](#主要内容包含)
+##### Vue 生命周期和钩子函数 [:cyclone:](#主要内容包含)
 
 | 生命周期      | 描述                                                                     |
 | ------------- | ------------------------------------------------------------------------ |
@@ -728,11 +728,11 @@ false; // Before
 
 ##### 关于 Ref [:cyclone:](#主要内容包含)
 
-###### vue
+###### Vue
 
     只要想要在 Vue 中直接操作 DOM 元素，就必须用 ref 属性进行注册.先在 DOM 中使用 ref 标签进行了注册，然后便可以通过 this.$refs 再跟注册时的名称来引用 DOM 元素了
 
-###### react
+###### React
 
     ref 用在处理表单空间聚焦，文本选择，媒体播放以及触发动画效果等等. ref 是一个 React 的非常特殊的属性，这个属性一定是接受一个回调函数，这个回调函数会在组件渲染时进行执行一遍，在从视图中撤出来时会执行一遍
 
@@ -925,3 +925,165 @@ plan-c. {
 
 - reflow（回流）：当浏览器发现某个部分发生了点变化影响了布局，需要倒回去重新渲染
 - repaint（重绘）：改变某个元素的背景色、文字颜色、边框颜色等等不影响它周围或内部布局时，屏幕需要一部分重画，但是元素尺寸没有改变
+
+#### 前端攀阶
+
+##### 如何判断一个对象有环 [:rocket:](#主要内容包含)
+
+```javascript
+function cycleDetector(obj) {
+  // 请添加代码
+  let result = true;
+  try {
+    JSON.stringify(obj);
+  } catch (e) {
+    result = false;
+  } finally {
+    return result;
+  }
+}
+```
+
+##### ES6 数组新特性 [:rocket:](#主要内容包含)
+
+```javascript
+/**
+ * Array.forEach() // forEach遍历数组，无返回值，不改变原数组，仅仅只是遍历、常用于注册组件、指令等等。
+ * Array.map() //【映射】 map遍历数组，和forEach用法相似，但是会返回一个新数组，map不会改变原数组的值。
+ * Array.filter() //【筛选】 filter过滤掉数组中不满足条件的值，返回一个新数组，不改变原数组的值。
+ * Array.some() //【或】 遍历数组的每一项，如果有一个满足条件则返回true，停止遍历，结果返回true。不改变数组。
+ * Array.every() //【且】 遍历数组每一项，每一项返回true,则最终结果为true。当任何一项返回false时，停止遍历，返回false。不改变原数组
+ * Array.reduce() //【从左到右累加】 Reduce让数组的前后两项进行某种计算。然后返回其值，并继续计算。不改变原数组，返回计算的最终结果，从数组的第二项开始遍历。
+ * Array.reduceRight() //【从右到左累加】
+ */
+
+//array.reduce(callbackfn[, initialValue]) // initialValue选填，用作初始值来启动累积。array 和 callbackfn必填 （数组对象，遍历元素。遍历元素可以接受最多四个参数【result,item,index,arr 】）
+var arr = [1, 2, 3, 4];
+arr.reduce((result, item, index, arr) => {
+  console.log(result); // 1  3  6  result为上次一计算的结果
+  console.log(item); // 2  3  4
+  console.log(index); // 1  2  3
+  return result + item; // 最终结果为10
+});
+```
+
+##### React 的 JSX [:rocket:](#主要内容包含)
+
+> JSX 允许我们在 Javascript 中写 HTML，而不是用 HTML 包含 Javascript。它能帮助我们快速开发，因为我们不用担心字符串和换行等。JSX 每一个组件都有一个 `render` 方法，这个方法产生一个`ViewModel 视图模型`–在返回 HTML 到组件之前，你可以将这个模型的信息放入视图中，意味着你的 HTML 会根据这个模型动态改变(例如一个动态列表)。一旦你完成了操作，就可以返回你想渲染(`render`)的东西
+
+##### JSX 的注意点 [:rocket:](#主要内容包含)
+
+1. 如果在 JSX 中给元素添加类, 需要使用 `className` 代替 `class`
+   类似：label 的 `for` 属性，使用 `htmlFor` 代替
+2. 在 JSX 中可以直接使用 JS 代码，直接在 JSX 中通过 `{}` 中间写 JS 代码即可
+3. 在 JSX 中只能使用表达式，但是 **不能出现语句**！！！
+4. 在 JSX 中注释语法：{/_ 中间是注释的内容 _/}
+
+##### React 组件生命周期 [:rocket:](#主要内容包含)
+
+###### 装载过程
+
+依次调用如下过程 `constructor` 、 `getInitialState` 、 `getDefaultProps` 、 `componentWillMont` 、 `render` 、 `componentDIdMount`
+
+1. constructor
+
+> 就是 `ES6` 里的构造函数，创建一个组件类的实例，在这一过程中我们要进行两步操作：初始化 state，绑定成员函数的 this 环境
+
+2. getInitialState 和 getDefaultProps
+
+> 这个两个过程可以不去深究，只会在用到 React.createClass 方法创造的组件类才会发生作用，所以在 `ES6` 的方法定义的 React 组件中根本不会用到
+
+3. render
+
+> 不夸张的说 `render` 是 React 组件中最为重要的一个函数。这个 React 中唯一不可忽略的函数，在 `render` 函数中，只能有一个父元素。
+
+> 其中需要深入分析的是：`render` 函数是一个纯函数，他并不进行实际上的渲染动作，他只是一个 JSX 描述的结构，最终是由 React 来进行渲染过程，`render` 函数中不应该有任何操作，对页面的描述完全取决于 `this.state` 和 `this.props` 的返回结果，不能在 `render` 调用 `this.setState`
+
+有一个公式总结的非常形象 `UI = render(data)`
+
+4. componenWillMonunt 和 componentDidMount
+
+> 这两个函数分别在 `render` 前后执行，`componentWillMonut` 显得有些鸡肋，还没有任何东西展示，操作完全可以提前到 `constructor` 中来进行  
+> 但是 `componentDidMount` 函数作用就大得多，由于这一过程通常只能在浏览器端调用，所以我们在这里获取异步数据，而且在 `componentDidMount` 调用的时候，组件已经被装载到 DOM 树上了，还有，可以在这里执行其他库的代码，比如 Jquery
+
+###### 更新过程
+
+简单来说就是 props 和 state 被修改的过程，依次调用 `compWillReceiveProps`、 `shouldComponentUpdate`. `componentWillUpdate`、 `render`、 `componentDidUpdate`
+
+1. componentWillReceiveProps（nextProps）
+
+> 并不是只有在 `props` 发生改变的时候才会被调用，实际上只要是父组件的 `render` 函数被调用，`render`里面被渲染的子组件就会被更新，不管父组件传给子组件的 `props` 有没有被改变，都会触发子组件的 `componentWillReceiveProps` 过程，但是，`this.setState` 方法的触发过程不会调用这个函数，因为这个函数适合根据新的 `props` 的值来计算出是不是要更新内部状态的 `state`。
+
+2. shouldComponentUpdate（nextProps， nextState）
+
+> 这个函数的重要性，仅次于 `render`，稳坐第二把交椅，`render` 函数决定了改渲染什么，而 `shouldComponentUpdate` 决定了不需要渲染什么，这两位大佬都需要返回函数，这一过程可以提高性能，忽略掉没有必要重新渲染的过程
+
+3. componentWillUpdate 和 componentDidUpdate
+
+> 和装载过程不同，这里的 componentDidUpdate，既可以在浏览器端执行，也可以在服务器端执行
+
+###### 卸载过程
+
+> 如果你准备吧组件从 DOM 移除时，这个函数将会被调用。这让我们可以在组件背后进行清理，比如移除任何我们已经绑定的事件监听器。如果我们没有在自身背后做清理，而当其中一个事件被触发时，就会尝试去计算一个没有载入的组件，React 就会抛出一个错误。
+
+##### Virtual DOM 算法简述 [:rocket:](#主要内容包含)
+
+包括几个步骤
+
+1. 用 JavaScript 对象结构表示 DOM 树的结构；然后用这个树构建一个真正的 DOM 树，插到文档当中。
+2. 当状态变更的时候，重新构造一棵新的对象树。然后用新的树和旧的树进行比较，记录两棵树差异。
+3. 把 `2` 所记录的差异应用到步骤 `1` 所构建的真正的 DOM 树上，视图就更新了。
+
+> Virtual DOM 本质上就是在 `JS` 和 `DOM` 之间做了一个缓存。可以类比 CPU 和 硬盘，既然硬盘这么慢，我们就在它们之间加个缓存：既然 `DOM` 这么慢，我们就在它们 `JS` 和 `DOM` 之间加个缓存。`CPU（JS）`只操作`内存（Virtual）`。
+
+##### Angular 和 Vue 的动态刷新方式 [:rocket:](#主要内容包含)
+
+###### Angular
+
+> 脏检查来刷新数据显示。一次脏检查就是调用一次 `$apply()` 或者 `$digest()`,将数据中最新的值呈现在界面上。在部分情况下，脏检查是低效的, 它的效率基本上取决于你绑定的观察者数量。
+
+###### Vue
+
+> 通过 `getter` 和 `setter` 的方法来检测后台数据变化，一旦变化就会被 `setter` 捕捉，然后来触发界面变化。同 Angular 事件驱动的方式不同的是通过数据驱动的。
+
+Angular 可以手动触发 `apply()`来一次更新界面,但是 Vue 一旦检测数据变化 就会触发界面更新，这是很耗费性能的事。合理的选择才能突破 dom 优化的瓶颈。
+
+##### React、Vue 和 Angular 的性能比较 [:rocket:](#主要内容包含)
+
+###### 初始渲染
+
+> Virtual DOM > 脏检查 >= 依赖收集
+
+###### 小量数据更新
+
+> 依赖收集 >> Virtual DOM + 优化 > 脏检查（无法优化） > Virtual DOM 无优化
+
+###### 大量数据更新
+
+> 脏检查 + 优化 >= 依赖收集 + 优化 > Virtual DOM（无法/无需优化）>> MVVM 无优化
+
+**Virtual DOM 真正的价值从来都不是性能**，而是它
+
+- 为函数式的 UI 编程方式打开了大门；
+- 可以渲染到 DOM 以外的 Backend，比如 [React Native](https://reactnative.cn/)。
+
+> 使用感知上：  
+> ng 相当于中高档餐厅，用餐者的关注点在于用餐礼仪、消费能力等问题上。  
+> vue 相当于便利店或者快餐厅，用餐者的关注点在于用餐效率。  
+> react 则相当于家庭厨房，用餐者的关注点不再局限于`吃`这一个点上，既能反馈与处理食物细节问题，又能掌控制作食物的流程......
+
+##### React 创建组件的两种方式 [:rocket:](#主要内容包含)
+
+- 通过 JS 函数创建（**无状态组件**）
+- 通过 class 创建（**有状态组件**）
+
+###### javascript 函数创建, 注意:
+
+- 函数名称必须为`大写字母`开头，React 通过这个特点来判断是不是一个组件
+- 函数必须有返回值，返回值可以是：`JSX 对象`或 `null`
+- 返回的 JSX，必须有一个`根元素`
+- 组件的返回值使用`()`包裹，避免换行问题
+
+##### 有关 key [:rocket:](#主要内容包含)
+
+`key` 的特殊属性主要在 虚拟 DOM 算法，在新旧 `nodes` 对比时辨识 VNdoes。如果不适用 `key`，Vue 和 React 会使用一种最大限度减少动态元素并且尽可能的尝试修复、再复用相同类型元素的算法。使用 `key`，它会基于 `key` 的变化重新排列元素顺序，并且会移除 `key` 不存在的元素。**有相同父元素的的子元素必须有独特的 key**。重复的 key 会造成渲染错误。
