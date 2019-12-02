@@ -22,15 +22,15 @@
 - [:rocket:前端攀阶](#前端攀阶)
 - [:ledger:前端常识](#前端常识)
 
-#### 前端基础
+### 前端基础
 
-##### HTML 文档三种常见 DOM 节点 [:cyclone:](#主要内容包含)
+#### HTML 文档三种常见 DOM 节点 [:cyclone:](#主要内容包含)
 
 - 元素节点（标签）
 - 文本节点（文本内容）
 - 属性节点（元素属性）
 
-##### javascript 变量提升 [:cyclone:](#主要内容包含)
+#### javascript 变量提升 [:cyclone:](#主要内容包含)
 
 ```
 对于变量 var x = 1; foo();
@@ -44,14 +44,14 @@
 分析这种问题的时候，有意识拆分变量声明和赋值，提升函数位置会看得更明显
 ```
 
-##### 运算符 `&` 与 `&&` 和 `|` 与 `||` [:cyclone:](#主要内容包含)
+#### 运算符 `&` 与 `&&` 和 `|` 与 `||` [:cyclone:](#主要内容包含)
 
 - `&`和 `|` 既是逻辑运算符也是位运算符，而`&&`和`||`只是逻辑运算符
 - `&`和`|`都是先看左边成不成立，左边不成立直接输出
 - `&&`和`||`两边都要看，看完之后再输出
 - `&&`左真看右，左假为假；`||`左真为真，左假看右
 
-##### `String` 字符串对象属性 [:cyclone:](#主要内容包含)
+#### `String` 字符串对象属性 [:cyclone:](#主要内容包含)
 
 ```
 length、concat(String)、indexOf(String)、substr(num1,[num2])、toLowerCase()、toUpperCase()、replace(str1,str2)
@@ -61,7 +61,7 @@ Date日期对象：getYear()/getFullYear()/getMonth()/getDate()...
 Math数学对象：ceil(数值)向下取整、floor(数值)向上取整、min(num1,num2)/max(num1,num2)返回最大最小值、pow(x,n)返回x的n次方、random()、round(数值)四舍五入、sqrt(数值)开平方
 ```
 
-##### `Window` 对象 [:cyclone:](#主要内容包含)
+#### `Window` 对象 [:cyclone:](#主要内容包含)
 
 - alert
 - confirm
@@ -86,7 +86,7 @@ Math数学对象：ceil(数值)向下取整、floor(数值)向上取整、min(nu
   document HTML 文档对象
 ```
 
-##### 数组去重四种方式 [:cyclone:](#主要内容包含)
+#### 数组去重四种方式 [:cyclone:](#主要内容包含)
 
 1. 通过新建数组，遍历查找方法去重存入，第二个循环可以用`indexOf`替换)
 
@@ -153,7 +153,7 @@ console.log(arr.unique3());
 Array.from(new Set(arr.flat(Infinity))).sort((a, b) => !!a - b);
 ```
 
-##### CSS 元素隐藏显示 [:cyclone:](#主要内容包含)
+#### CSS 元素隐藏显示 [:cyclone:](#主要内容包含)
 
 - `display:none/block`
 
@@ -161,14 +161,14 @@ Array.from(new Set(arr.flat(Infinity))).sort((a, b) => !!a - b);
 
 - `opacity:0/1`
 
-##### 排序 [:cyclone:](#主要内容包含)
+#### 排序 [:cyclone:](#主要内容包含)
 
 - 交换排序：冒泡排序、快速排序
 - 插入排序：直接插入排序、希尔排序
 - 选择排序：简单选择排序、堆排序
 - 归并排序
 
-###### 1）冒泡排序
+##### 1）冒泡排序
 
 ```javascript
 function bubbleSort(arr) {
@@ -189,7 +189,7 @@ function bubbleSort(arr) {
 
 > 算法分析：最佳 O(n)，最差 O(n<sup>2</sup>)，平均 O(n<sup>2</sup>)
 
-###### 2）简单选择排序
+##### 2）简单选择排序
 
 ```javascript
 function selectionSort(arr) {
@@ -212,7 +212,7 @@ function selectionSort(arr) {
 
 > 算法分析：最佳 O(n<sup>2</sup>)，最差 O(n<sup>2</sup>)，平均 O(n<sup>2</sup>)，十分稳定
 
-###### 3）插入排序
+##### 3）插入排序
 
 ```javascript
 function insertionSort(arr) {
@@ -234,7 +234,7 @@ function insertionSort(arr) {
 
 > 算法分析：最佳 O(n)，最差 O(n<sup>2</sup>)，平均 O(n<sup>2</sup>)，类似扑克牌正牌
 
-###### 4）希尔排序
+##### 4）希尔排序
 
 ```javascript
 function shellSort(arr) {
@@ -260,7 +260,7 @@ function shellSort(arr) {
 
 > 算法分析：最佳 O(n)，最差 O(n<sup>2</sup>)，平均 O(nlog2 n)
 
-###### 5）归并排序
+##### 5）归并排序
 
 ```javascript
 function mergeSort(arr) {
@@ -293,7 +293,7 @@ function merge(left, right) {
 
 > 算法分析：O(nlog2n)。分解：折半划分，合并：两两合并后排序
 
-###### 6）快速排序
+##### 6）快速排序
 
 ```javascript
 function quickSort(arr) {
@@ -314,7 +314,7 @@ function quickSort(arr) {
 
 > 算法分析：最佳 O(nlog2 n)，最差 O(n<sup>2</sup>)，平均 O(nlog2 n)。**实际中最常用的一种排序算法，速度快，效率高**
 
-###### 求解算法的时间复杂度的具体步骤：
+##### 求解算法的时间复杂度的具体步骤：
 
 ```
 一、找出算法中基本语句；
@@ -324,7 +324,7 @@ function quickSort(arr) {
 三、用大 O 记号表示算法的时间性能；
 ```
 
-##### 线性表查找 [:cyclone:](#主要内容包含)
+#### 线性表查找 [:cyclone:](#主要内容包含)
 
 ```
 顺序查找(ASL = (N + N-1 + ... + 2 + 1) / N = (N+1) / 2),时间复杂度为 O(N)
@@ -334,17 +334,17 @@ function quickSort(arr) {
 分块查找又称索引顺序查找。它是一种性能介于顺序查找和二分查找之间的查找方法。
 ```
 
-##### 迪杰斯特拉和弗洛伊德算法 [:cyclone:](#主要内容包含)
+#### 迪杰斯特拉和弗洛伊德算法 [:cyclone:](#主要内容包含)
 
-###### 1）迪杰斯特拉算法
+##### 1）迪杰斯特拉算法
 
 求从源点到其余各点的最短路径(『 贪心算法 』代表，权值不能存在负值)
 
-###### 2）弗洛伊德算法
+##### 2）弗洛伊德算法
 
 求每对顶点之间的最短路径(『 动态规划 』，权值能出现负值)
 
-##### 鼠标事件 [:cyclone:](#主要内容包含)
+#### 鼠标事件 [:cyclone:](#主要内容包含)
 
 - onmousemove 鼠标在元素上移动触发事件,子元素会冒泡给父元素
 - onmouseenter 鼠标在进入元素时触发事件，不冒泡；
@@ -353,7 +353,7 @@ function quickSort(arr) {
 - onmouseover、onmouseout：鼠标移动到自身时候会触发事件，同时移动到其子元素身上也会触发事件
 - onmouseenter、onmouseleave：鼠标移动到自身是会触发事件，但是移动到其子元素身上不会触发事件
 
-##### 六大类数据类型 [:cyclone:](#主要内容包含)
+#### 六大类数据类型 [:cyclone:](#主要内容包含)
 
 - undefined
 - object
@@ -369,9 +369,9 @@ function quickSort(arr) {
 > 原型链方法`.constructor == Array`;  
 > 通用的方法 `Object.prototype.toString.call(数据)`;
 
-##### Object.assign() [:cyclone:](#主要内容包含)
+#### Object.assign() [:cyclone:](#主要内容包含)
 
-###### 1）实现拷贝
+##### 1）实现拷贝
 
 用于将所有可枚举属性的值从一个或多个源对象复制到目标对象（浅拷贝）
 JSON 解析反解析`JSON.parse(JSON.stringify(obj))`以实现深拷贝
@@ -401,7 +401,7 @@ console.log(arr2);
     }
 ```
 
-###### 2）合并对象的功能
+##### 2）合并对象的功能
 
 `Object.assign` 方法的第一个参数是目标对象，后面的参数都是源对象
 
@@ -414,7 +414,7 @@ Object.assign(target, source1, source2);
 target; // {a:1, b:2, c:3}
 ```
 
-##### ES6 新特性 [:cyclone:](#主要内容包含)
+#### ES6 新特性 [:cyclone:](#主要内容包含)
 
 - Default Parameters（默认参数）
 - Template Literals （模板文本）
@@ -427,7 +427,7 @@ target; // {a:1, b:2, c:3}
 - Classes（类）
 - Modules（模块）
 
-##### axios 特色 [:cyclone:](#主要内容包含)
+#### axios 特色 [:cyclone:](#主要内容包含)
 
 - 浏览器端发起 `XMLHttpRequests` 请求
 - `node` 端发起 `http` 请求
@@ -438,7 +438,7 @@ target; // {a:1, b:2, c:3}
 - 自动转化 `json` 数据
 - 客户端支持抵御 `XSRF`（跨站请求伪造）
 
-##### Vue 生命周期和钩子函数 [:cyclone:](#主要内容包含)
+#### Vue 生命周期和钩子函数 [:cyclone:](#主要内容包含)
 
 | 生命周期      | 描述                                                                     |
 | ------------- | ------------------------------------------------------------------------ |
@@ -457,7 +457,7 @@ target; // {a:1, b:2, c:3}
 | mounted       | 在这发起后端请求，拿回数据，配合路由钩子做一些事情                       |
 | beforeDestory | 你确认删除 XX 吗？ `destoryed` ：当前组件已被删除，清空相关内容          |
 
-##### addEventListener 监听函数 [:cyclone:](#主要内容包含)
+#### addEventListener 监听函数 [:cyclone:](#主要内容包含)
 
 ```javascript
 var btnAdd = document.getElementById("btnAdd");
@@ -472,7 +472,7 @@ btnAdd.addEventListener(
 );
 ```
 
-##### 循环中创建闭包：一个常见的错误 [:cyclone:](#主要内容包含)
+#### 循环中创建闭包：一个常见的错误 [:cyclone:](#主要内容包含)
 
 ```javascript
 for (var i = 0; i <= oBtn.length; i++) {
@@ -483,14 +483,14 @@ for (var i = 0; i <= oBtn.length; i++) {
 // 会使条目一直指向最后一位(拆分作用域可以看的更清楚)
 ```
 
-###### 匿名函数(var fun = function(){...})
+##### 匿名函数(var fun = function(){...})
 
 > 匿名函数主要有两种常用的场景，一是回调函数，二是直接执行函数。  
 > 匿名函数直接执行函数的基本形式为`(function(){...})()`。
 > 前面的括号包含函数体，后面的括号就是给匿名函数传递参数并立即执行之。  
 > 匿名函数的作用是常用来包含代码以不污染全局命名空间运行后销毁环境，或者用做闭包。
 
-###### 解决办法：
+##### 解决办法：
 
 1. 使用匿名函数
 
@@ -517,11 +517,11 @@ for (let i = 0; i <= oBtn.length; i++) {
 
 3. 使用 foreach 迭代数组
 
-##### 时间戳 getTime() [:cyclone:](#主要内容包含)
+#### 时间戳 getTime() [:cyclone:](#主要内容包含)
 
 返回的就是格林威治时间 1970 年 1 月 1 日 0 点 0 分 0 秒 0 毫秒到现在的毫秒数
 
-##### 截取字符串 slice/splice/substr/substring(n,m) [:cyclone:](#主要内容包含)
+#### 截取字符串 slice/splice/substr/substring(n,m) [:cyclone:](#主要内容包含)
 
 ```javascript
 /**
@@ -540,7 +540,7 @@ var b = a.substring(1, 3); // error if a='abcd',b='bc',a='abcd'
 // split() 讲字符串切割成数组
 ```
 
-##### JS 设置 cookie [:cyclone:](#主要内容包含)
+#### JS 设置 cookie [:cyclone:](#主要内容包含)
 
 ```javascript
 /**
@@ -578,14 +578,14 @@ function delCookie(name) {
 }
 ```
 
-##### 简述面向对象 [:cyclone:](#主要内容包含)
+#### 简述面向对象 [:cyclone:](#主要内容包含)
 
 > 万物皆对象，把一个对象抽象成类,具体上就是把一个对象的静态特征和动态特征抽象成属性和方法,也就是把一类事物的算法和数据结构封装在一个类之中,程序就是多个对象和互相之间的通信组成的. 面向对象具有封装性,继承性,多态性。  
 >  **『 封装 』**:隐蔽了对象内部不需要暴露的细节,使得内部细节的变动跟外界脱离,只依靠接口进行通信.封装性降低了编程的复杂性。  
 > 通过 **『 继承 』**,使得新建一个类变得容易,一个类从派生类那里获得其非私有的方法和公用属性的繁琐工作交给了编译器。  
 > 而继承和实现接口和运行时的类型绑定机制 所产生的 **『 多态 』**,使得不同的类所产生的对象能够对相同的消息作出不同的反应,极大地提高了代码的通用性. 总之,面向对象的特性提高了大型程序的重用性和可维护性。
 
-##### Number/JSON [:cyclone:](#主要内容包含)
+#### Number/JSON [:cyclone:](#主要内容包含)
 
 ```javascript
 Infinity; // 无穷数 一般用来描述动画的重复次数; N维数组的无限降维 arr.flat(Infinity)
@@ -595,9 +595,9 @@ JSON.parse(); // 用于将一个 JSON 字符串转换为 JavaScript 对象。
 JSON.stringify(); // 用于将 JavaScript 值转换为 JSON 字符串。
 ```
 
-##### attachEvent 和 addEventListener [:cyclone:](#主要内容包含)
+#### attachEvent 和 addEventListener [:cyclone:](#主要内容包含)
 
-###### 相同点
+##### 相同点
 
 > dom 对象的方法，可以实现一种事件绑定多个事件处理函数。
 
@@ -614,7 +614,7 @@ obj.addEventListener('click',function(){{console.log('2');},false);
 obj.addEventListener('click',function(){{console.log('3');},false);
 ```
 
-###### 不同点
+##### 不同点
 
 > 执行顺序不同
 
@@ -635,7 +635,7 @@ console.log("3");
 3. 绑定时间时，`attachEvent` 必须带 `on`，如 `onclick`，`onmouseover` 等，而 `addEventListener` 不能带 `on`，如 `click`，`mouseover`。这个区别在以上代码中可见。
 4. `attachEvent` 仅需要传递两个参数，而 `addEventListener` 需要传递三个参数，这里牵扯到『 事件流 』的概念。
 
-##### Spread Operator 展开运算符 [:cyclone:](#主要内容包含)
+#### Spread Operator 展开运算符 [:cyclone:](#主要内容包含)
 
 Spread Operator 即 3 个点 ...，有几种不同的使用方法。
 
@@ -695,7 +695,7 @@ const d = 4;
 const ret = { ...foo, ...bar, d }; // { a:1, b:3, c:2, d:4 }
 ```
 
-##### JS 部分简写 :checkered_flag: 逼格拔高 [:cyclone:](#主要内容包含)
+#### JS 部分简写 :checkered_flag: 逼格拔高 [:cyclone:](#主要内容包含)
 
 ```javascript
 // 取整
@@ -726,19 +726,19 @@ false; // Before
 !1; // After
 ```
 
-##### 关于 Ref [:cyclone:](#主要内容包含)
+#### 关于 Ref [:cyclone:](#主要内容包含)
 
-###### Vue
+##### Vue
 
     只要想要在 Vue 中直接操作 DOM 元素，就必须用 ref 属性进行注册.先在 DOM 中使用 ref 标签进行了注册，然后便可以通过 this.$refs 再跟注册时的名称来引用 DOM 元素了
 
-###### React
+##### React
 
     ref 用在处理表单空间聚焦，文本选择，媒体播放以及触发动画效果等等. ref 是一个 React 的非常特殊的属性，这个属性一定是接受一个回调函数，这个回调函数会在组件渲染时进行执行一遍，在从视图中撤出来时会执行一遍
 
-##### 关于 Set 和 Map [:cyclone:](#主要内容包含)
+#### 关于 Set 和 Map [:cyclone:](#主要内容包含)
 
-###### Set
+##### Set
 
 `ES6`新的数据结构，类似数组但是内容唯一
 
@@ -767,7 +767,7 @@ Array.from(obj); // ['test',19,['jane','john','Mary']]
 Object.keys(obj); // ['name','age','brother']
 ```
 
-###### Map
+##### Map
 
 Map 结构提供了`值--值`的对应，是一种更完善的`hash`结构的实现。类似`Object`,也是键值对的集合，但是『 键 』的范围不限于字符串，各种类型的值（包括对象）都可以成为『 键 』
 
@@ -788,7 +788,7 @@ m.get(["a"]); // undefined。表面键相同但是内存地址不一样
 > 实例属性和方法：**size**、**set**、**get**、**has**、**delete**、**clear**  
 > 遍历方法：`keys()`、`values()`、`entries()`、`forEach()`
 
-##### 同源策略[:cyclone:](#主要内容包含)
+#### 同源策略[:cyclone:](#主要内容包含)
 
 ```
 源（origin）就是协议、域名和端口号。
@@ -803,14 +803,14 @@ m.get(["a"]); // undefined。表面键相同但是内存地址不一样
     HTML中的script标签可以加载并执行其他域的javascript，于是我们可以通过script标记来动态加载其他域的资源
 ```
 
-##### Css 中 white-space、word-break、word-wrap [:cyclone:](#主要内容包含)
+#### Css 中 white-space、word-break、word-wrap [:cyclone:](#主要内容包含)
 
 - white-space: 用来控制空白符的显示，同时控制是否自动换行。常用`normal`(正常换行)、`nowrap`(不换行)
 - word-break: 控制单纯如何被拆分换行。`normal`、`break-all`、`keep-all`
 - word-wrap(overflow-wrap)：控制长度超过一行的单纯是否被拆分换行，是 word-break 的一个补充。`normal`、`break-word`
   > 配合`text-overflow：ellipsis`实现[文本溢出](#单行文本溢出)
 
-##### CSS3 动画 [:cyclone:](#主要内容包含)
+#### CSS3 动画 [:cyclone:](#主要内容包含)
 
 ```css
 .animation {
@@ -835,9 +835,9 @@ m.get(["a"]); // undefined。表面键相同但是内存地址不一样
 }
 ```
 
-##### CSS 怎么实现单、多行文本溢出 [:cyclone:](#主要内容包含)
+#### CSS 怎么实现单、多行文本溢出 [:cyclone:](#主要内容包含)
 
-###### 单行文本溢出
+##### 单行文本溢出
 
 ```css
 .ellipsis {
@@ -847,7 +847,7 @@ m.get(["a"]); // undefined。表面键相同但是内存地址不一样
 }
 ```
 
-###### 多行文本溢出：
+##### 多行文本溢出：
 
 ```css
 .ellipsis {
@@ -858,16 +858,16 @@ m.get(["a"]); // undefined。表面键相同但是内存地址不一样
 }
 ```
 
-##### BFC 布局 （块级格式化上下文） [:cyclone:](#主要内容包含)
+#### BFC 布局 （块级格式化上下文） [:cyclone:](#主要内容包含)
 
-###### 应用
+##### 应用
 
 - 解决 `margin-top` 和 `margin-bottom` 叠加
 - 用于布局（比如两栏布局）
 - 用于清除浮动
 - 计算 BFC 高度
 
-###### 触发 BFC
+##### 触发 BFC
 
 - 设置除 `float:none` 以外的属性值（如：left | right）就会触发 BFC
 - 设置除 `overflow: visible` 以外的属性值（如： hidden | auto | scroll）就会触发 BFC
@@ -875,7 +875,7 @@ m.get(["a"]); // undefined。表面键相同但是内存地址不一样
 - 设置 `position` 为绝对定位：absolute | fixed 就会触发 BFC
 - 使用 `fieldset` 元素（可以给表单元素设置环绕边框的 html 元素）也会触发 BFC
 
-##### CSS 实现三角形 [:cyclone:](#主要内容包含)
+#### CSS 实现三角形 [:cyclone:](#主要内容包含)
 
 ```css
 .triangle {
@@ -887,7 +887,7 @@ m.get(["a"]); // undefined。表面键相同但是内存地址不一样
 }
 ```
 
-##### CSS 垂直水平居中 [:cyclone:](#主要内容包含)
+#### CSS 垂直水平居中 [:cyclone:](#主要内容包含)
 
 ```css
 plan-a. {
@@ -913,7 +913,7 @@ plan-c. {
 }
 ```
 
-##### 浏览器渲染原理 [:cyclone:](#主要内容包含)
+#### 浏览器渲染原理 [:cyclone:](#主要内容包含)
 
 1. DOM Tree：浏览器将 `HTML` 解析成树形的数据结构。
 2. CSS Rule Tree：浏览器将 `CSS` 解析成树形的数据结构。
@@ -921,14 +921,14 @@ plan-c. {
 4. layout：有了 `Render Tree`，浏览器已经能知道网页中有哪些节点、各个节点的 `CSS` 定义以及他们的从属关系，从而去计算出每个节点在屏幕中的位置。
 5. painting: 按照算出来的规则，通过显卡，把内容画到屏幕上。
 
-###### 回流 重绘
+##### 回流 重绘
 
 - reflow（回流）：当浏览器发现某个部分发生了点变化影响了布局，需要倒回去重新渲染
 - repaint（重绘）：改变某个元素的背景色、文字颜色、边框颜色等等不影响它周围或内部布局时，屏幕需要一部分重画，但是元素尺寸没有改变
 
-#### 前端攀阶
+### 前端攀阶
 
-##### 如何判断一个对象有环 [:rocket:](#主要内容包含)
+#### 如何判断一个对象有环 [:rocket:](#主要内容包含)
 
 ```javascript
 function cycleDetector(obj) {
@@ -944,7 +944,7 @@ function cycleDetector(obj) {
 }
 ```
 
-##### ES6 数组新特性 [:rocket:](#主要内容包含)
+#### ES6 数组新特性 [:rocket:](#主要内容包含)
 
 ```javascript
 /**
@@ -967,11 +967,11 @@ arr.reduce((result, item, index, arr) => {
 });
 ```
 
-##### React 的 JSX [:rocket:](#主要内容包含)
+#### React 的 JSX [:rocket:](#主要内容包含)
 
 > JSX 允许我们在 Javascript 中写 HTML，而不是用 HTML 包含 Javascript。它能帮助我们快速开发，因为我们不用担心字符串和换行等。JSX 每一个组件都有一个 `render` 方法，这个方法产生一个`ViewModel 视图模型`–在返回 HTML 到组件之前，你可以将这个模型的信息放入视图中，意味着你的 HTML 会根据这个模型动态改变(例如一个动态列表)。一旦你完成了操作，就可以返回你想渲染(`render`)的东西
 
-##### JSX 的注意点 [:rocket:](#主要内容包含)
+#### JSX 的注意点 [:rocket:](#主要内容包含)
 
 1. 如果在 JSX 中给元素添加类, 需要使用 `className` 代替 `class`
    类似：label 的 `for` 属性，使用 `htmlFor` 代替
@@ -979,9 +979,9 @@ arr.reduce((result, item, index, arr) => {
 3. 在 JSX 中只能使用表达式，但是 **不能出现语句**！！！
 4. 在 JSX 中注释语法：{/_ 中间是注释的内容 _/}
 
-##### React 组件生命周期 [:rocket:](#主要内容包含)
+#### React 组件生命周期 [:rocket:](#主要内容包含)
 
-###### 装载过程
+##### 装载过程
 
 依次调用如下过程 `constructor` 、 `getInitialState` 、 `getDefaultProps` 、 `componentWillMont` 、 `render` 、 `componentDIdMount`
 
@@ -1006,7 +1006,7 @@ arr.reduce((result, item, index, arr) => {
 > 这两个函数分别在 `render` 前后执行，`componentWillMonut` 显得有些鸡肋，还没有任何东西展示，操作完全可以提前到 `constructor` 中来进行  
 > 但是 `componentDidMount` 函数作用就大得多，由于这一过程通常只能在浏览器端调用，所以我们在这里获取异步数据，而且在 `componentDidMount` 调用的时候，组件已经被装载到 DOM 树上了，还有，可以在这里执行其他库的代码，比如 Jquery
 
-###### 更新过程
+##### 更新过程
 
 简单来说就是 props 和 state 被修改的过程，依次调用 `compWillReceiveProps`、 `shouldComponentUpdate`. `componentWillUpdate`、 `render`、 `componentDidUpdate`
 
@@ -1022,18 +1022,18 @@ arr.reduce((result, item, index, arr) => {
 
 > 和装载过程不同，这里的 componentDidUpdate，既可以在浏览器端执行，也可以在服务器端执行
 
-###### 卸载过程
+##### 卸载过程
 
 > 如果你准备吧组件从 DOM 移除时，这个函数将会被调用。这让我们可以在组件背后进行清理，比如移除任何我们已经绑定的事件监听器。如果我们没有在自身背后做清理，而当其中一个事件被触发时，就会尝试去计算一个没有载入的组件，React 就会抛出一个错误。
 
-##### React 中 render 的触发方式 [:rocket:](#主要内容包含)
+#### React 中 render 的触发方式 [:rocket:](#主要内容包含)
 
 - 首次渲染 `initial Render`
 - 调用 `this.setState` (并不是一次 `setState` 会触发一次 `render`，`React` 可能会合并操作，再统一 `render`)
 - 父组件发生更新(`props` 发生改变，但是就算 `props` 没有改变或者父子组件之间没有数据交换也会重新 `render`)
 - 使用 `this.forceUpdate` 强制 `render`
 
-##### Virtual DOM 算法简述 [:rocket:](#主要内容包含)
+#### Virtual DOM 算法简述 [:rocket:](#主要内容包含)
 
 包括几个步骤
 
@@ -1043,29 +1043,29 @@ arr.reduce((result, item, index, arr) => {
 
 > Virtual DOM 本质上就是在 `JS` 和 `DOM` 之间做了一个缓存。可以类比 CPU 和 硬盘，既然硬盘这么慢，我们就在它们之间加个缓存：既然 `DOM` 这么慢，我们就在它们 `JS` 和 `DOM` 之间加个缓存。`CPU（JS）`只操作`内存（Virtual）`。
 
-##### Angular 和 Vue 的动态刷新方式 [:rocket:](#主要内容包含)
+#### Angular 和 Vue 的动态刷新方式 [:rocket:](#主要内容包含)
 
-###### Angular
+##### Angular
 
 > 脏检查来刷新数据显示。一次脏检查就是调用一次 `$apply()` 或者 `$digest()`,将数据中最新的值呈现在界面上。在部分情况下，脏检查是低效的, 它的效率基本上取决于你绑定的观察者数量。
 
-###### Vue
+##### Vue
 
 > 通过 `getter` 和 `setter` 的方法来检测后台数据变化，一旦变化就会被 `setter` 捕捉，然后来触发界面变化。同 Angular 事件驱动的方式不同的是通过数据驱动的。
 
 Angular 可以手动触发 `apply()`来一次更新界面,但是 Vue 一旦检测数据变化 就会触发界面更新，这是很耗费性能的事。合理的选择才能突破 dom 优化的瓶颈。
 
-##### React、Vue 和 Angular 的性能比较 [:rocket:](#主要内容包含)
+#### React、Vue 和 Angular 的性能比较 [:rocket:](#主要内容包含)
 
-###### 初始渲染
+##### 初始渲染
 
 > Virtual DOM > 脏检查 >= 依赖收集
 
-###### 小量数据更新
+##### 小量数据更新
 
 > 依赖收集 >> Virtual DOM + 优化 > 脏检查（无法优化） > Virtual DOM 无优化
 
-###### 大量数据更新
+##### 大量数据更新
 
 > 脏检查 + 优化 >= 依赖收集 + 优化 > Virtual DOM（无法/无需优化）>> MVVM 无优化
 
@@ -1079,25 +1079,25 @@ Angular 可以手动触发 `apply()`来一次更新界面,但是 Vue 一旦检�
 > vue 相当于便利店或者快餐厅，用餐者的关注点在于用餐效率。  
 > react 则相当于家庭厨房，用餐者的关注点不再局限于`吃`这一个点上，既能反馈与处理食物细节问题，又能掌控制作食物的流程......
 
-##### React 创建组件的两种方式 [:rocket:](#主要内容包含)
+#### React 创建组件的两种方式 [:rocket:](#主要内容包含)
 
 - 通过 JS 函数创建（**无状态组件**）
 - 通过 class 创建（**有状态组件**）
 
-###### javascript 函数创建, 注意:
+javascript 函数创建, 需要注意:
 
 - 函数名称必须为`大写字母`开头，React 通过这个特点来判断是不是一个组件
 - 函数必须有返回值，返回值可以是：`JSX 对象`或 `null`
 - 返回的 JSX，必须有一个`根元素`
 - 组件的返回值使用`()`包裹，避免换行问题
 
-##### 有关 key [:rocket:](#主要内容包含)
+#### 有关 key [:rocket:](#主要内容包含)
 
 `key` 的特殊属性主要在 虚拟 DOM 算法，在新旧 `nodes` 对比时辨识 VNdoes。如果不适用 `key`，Vue 和 React 会使用一种最大限度减少动态元素并且尽可能的尝试修复、再复用相同类型元素的算法。使用 `key`，它会基于 `key` 的变化重新排列元素顺序，并且会移除 `key` 不存在的元素。**有相同父元素的的子元素必须有独特的 key**。重复的 key 会造成渲染错误。
 
-##### Vue 修饰符 [:rocket:](#主要内容包含)
+#### Vue 修饰符 [:rocket:](#主要内容包含)
 
-###### 事件修饰符
+##### 事件修饰符
 
 ```
 - .stop <!-- 阻止单击事件继续传播 -->
@@ -1109,7 +1109,7 @@ Angular 可以手动触发 `apply()`来一次更新界面,但是 Vue 一旦检�
 - .native <!-- 给自定义的组件添加原生事件 -->
 ```
 
-###### 按键修饰符
+##### 按键修饰符
 
 ```
 .enter
@@ -1123,7 +1123,7 @@ Angular 可以手动触发 `apply()`来一次更新界面,但是 Vue 一旦检�
 .right
 ```
 
-###### 系统修饰符
+##### 系统修饰符
 
 ```
 .ctrl
@@ -1132,7 +1132,7 @@ Angular 可以手动触发 `apply()`来一次更新界面,但是 Vue 一旦检�
 .meta
 ```
 
-###### 表单输入修饰符
+##### 表单输入修饰符
 
 ```
 .lazy: <input v-model.lazy="msg" ><!-- 在“change”时而非“input”时更新 -->
@@ -1140,15 +1140,15 @@ Angular 可以手动触发 `apply()`来一次更新界面,但是 Vue 一旦检�
 .trim: <input v-model.trim="msg"><!-- 过滤用户输入的首尾空白字符 -->
 ```
 
-##### Vue 关于 \$emit 的用法 [:rocket:](#主要内容包含)
+#### Vue 关于 \$emit 的用法 [:rocket:](#主要内容包含)
 
 - 父组件可以使用 `props` 把数据传给子组件。
 - 子组件可以使用 `$emit` 触发父组件的自定义事件。
   > vm.\$emit( event, […args] ) // 子组件通过 **\$emit** 来触发事件，将参数传递出去。
 
-##### javascript 工厂模式函数、构造函数、原型模式 [:rocket:](#主要内容包含)
+#### javascript 工厂模式函数、构造函数、原型模式 [:rocket:](#主要内容包含)
 
-###### 工厂函数
+##### 工厂函数
 
 > 工厂模式中的函数中会创建一个对象，最后 `return` 这个对象，通过每次调用时传入的参数不同来 **解决创建多个相似对象的问题**。
 
@@ -1168,7 +1168,7 @@ var tianjiao = creatPerson("tj", 22, "fe");
 console.log(tianjiao);
 ```
 
-###### 构造函数
+##### 构造函数
 
 > 构造函数本身也是函数，只不过是一个 **创建对象** 的函数
 
@@ -1185,7 +1185,7 @@ var tj2 = new Person("tj2", 23);
 console.log(tj2);
 ```
 
-###### 原型模式
+##### 原型模式
 
 > 每个函数都有一个 `prototype` 属性，这个属性是一个指针，指向一个对象，这个对象的好处是可以 **让所有对象实例共享他所包含的属性和方法**。
 
@@ -1201,7 +1201,7 @@ var tj3 = new Person();
 console.log(tj3);
 ```
 
-##### 事件轮询机制 bind、apply、call 的区别 [:rocket:](#主要内容包含)
+#### 事件轮询机制 bind、apply、call 的区别 [:rocket:](#主要内容包含)
 
 `call` 和 `apply` 都是对函数的直接调用，**改变 this 指针指向即改变作用域**
 
@@ -1232,7 +1232,7 @@ alert(applyFun(10, 10)); //20
 alert(bindFun(10, 10)); //20
 ```
 
-###### 手写 call
+##### 手写 call
 
 ```javascript
 Funtion.prototype.mycall = function(context, ...args) {
@@ -1244,7 +1244,7 @@ Funtion.prototype.mycall = function(context, ...args) {
 };
 ```
 
-###### 手写 apply
+##### 手写 apply
 
 ```javascript
 Function.prototype.myapply = function(context, arr) {
@@ -1258,7 +1258,7 @@ Function.prototype.myapply = function(context, arr) {
 };
 ```
 
-###### 手写 bind
+##### 手写 bind
 
 ```javascript
 Function.prototype.mybind = function(ctx, ...args) {
@@ -1281,7 +1281,7 @@ testW.mycall(w, "nihao", "wgc");
 testW.myapply(w, ["NIHAO", "WGC"]);
 ```
 
-##### 函数防抖、函数节流 [:rocket:](#主要内容包含)
+#### 函数防抖、函数节流 [:rocket:](#主要内容包含)
 
 - 函数防抖：(任务触发的间隔超过指定间隔的时候，任务才会执行)
   - 定义：多次触发事件后，事件处理函数只执行一次，并且是在触发操作结束时执行。
@@ -1316,7 +1316,7 @@ testW.myapply(w, ["NIHAO", "WGC"]);
   }
   ```
 
-##### Vue 父子组件通过 props 传值示例 [:rocket:](#主要内容包含)
+#### Vue 父子组件通过 props 传值示例 [:rocket:](#主要内容包含)
 
 ```javascript
 var childNode = {
@@ -1351,9 +1351,9 @@ new Vue{(
 )}
 ```
 
-##### Vue/React 组件间通信 [:rocket:](#主要内容包含)
+#### Vue/React 组件间通信 [:rocket:](#主要内容包含)
 
-###### VUE
+##### VUE
 
 - 兄弟组件：创建一个事件总线 `bus`
   > 在需要传值的组件中用 `bus.$emit` 触发一个自定义事件，并传递参数  
@@ -1361,14 +1361,14 @@ new Vue{(
 - 父向子传值：在组件中绑定属性，子组件中 `props` 就可以获取
 - 子向父传值：通过在子组件方法中调用`$emit(方法名, 参数)`,方法名父组件中用 `on` 绑定
 
-###### REACT
+##### REACT
 
 - 兄弟组件：
   > `context`（还可以很好的适用跨级传值，和 `Vue` 中的 `bus` 属性一样都应该是高作用域的参数）一个是 `Context` 生产者『 Provider 』，通常是一个父节点，另外是一个 `Context` 的消费者『 Consumer 』，通常是一个或者多个子节点。所以 `Context` 的使用基于生产者消费者模式
 - 父向子传值：在组件中绑定属性，子组件中 `props` 就可以获取
 - 子向父传值：通过在子组件方法中通过 `props` 获取方法名，回调的方式传值
 
-##### Vue 源码之 :checkered_flag: VNode [:rocket:](#主要内容包含)
+#### Vue 源码之 :checkered_flag: VNode [:rocket:](#主要内容包含)
 
 其实 `VNode` 是对真实 `DOM` 的一种抽象描述，它的核心定义无非就几个关键属性，标签名、数据、子节点、键值等，其它属性都是都是用来扩展 `VNode` 的灵活性以及实现一些特殊 `feature` 的。由于 `VNode` 只是用来映射到真实 `DOM` 的渲染，不需要包含操作 `DOM` 的用法，因此它是非常轻量和简单的。`VirtualDOM` 除了它的数据结构的定义，映射到真实的 `DOM` 实际上要经历 `VNode` 的 **_create_**、**_diff_**、**_patch_** 等过程。
 
@@ -1399,7 +1399,7 @@ update 的核心就是调用 `vm.patch` 方法，这个方法在不同平台（�
 update (vnode: VNode, hydrating?: boolean)
 ```
 
-##### Vue 源码之 :checkered_flag: 响应式对象 [:rocket:](#主要内容包含)
+#### Vue 源码之 :checkered_flag: 响应式对象 [:rocket:](#主要内容包含)
 
 **核心是利用 ES5 的 Object.defineProperty**,这也是 `Vue.js` 为什么不能兼容 `IE8` 及以下浏览器的原因。
 
@@ -1466,7 +1466,7 @@ this.newDepIds = new Set();
 
 ---
 
-### 手写一个数据绑定：
+##### 手写一个数据绑定：
 
 ```javascript
 <input id="input" type="text" />
