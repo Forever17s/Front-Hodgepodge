@@ -1026,6 +1026,13 @@ arr.reduce((result, item, index, arr) => {
 
 > 如果你准备吧组件从 DOM 移除时，这个函数将会被调用。这让我们可以在组件背后进行清理，比如移除任何我们已经绑定的事件监听器。如果我们没有在自身背后做清理，而当其中一个事件被触发时，就会尝试去计算一个没有载入的组件，React 就会抛出一个错误。
 
+##### React 中 render 的触发方式 [:rocket:](#主要内容包含)
+
+- 首次渲染 `initial Render`
+- 调用 `this.setState` (并不是一次 `setState` 会触发一次 `render`，`React` 可能会合并操作，再统一 `render`)
+- 父组件发生更新(`props` 发生改变，但是就算 `props` 没有改变或者父子组件之间没有数据交换也会重新 `render`)
+- 使用 `this.forceUpdate` 强制 `render`
+
 ##### Virtual DOM 算法简述 [:rocket:](#主要内容包含)
 
 包括几个步骤
@@ -1087,3 +1094,397 @@ Angular 可以手动触发 `apply()`来一次更新界面,但是 Vue 一旦检�
 ##### 有关 key [:rocket:](#主要内容包含)
 
 `key` 的特殊属性主要在 虚拟 DOM 算法，在新旧 `nodes` 对比时辨识 VNdoes。如果不适用 `key`，Vue 和 React 会使用一种最大限度减少动态元素并且尽可能的尝试修复、再复用相同类型元素的算法。使用 `key`，它会基于 `key` 的变化重新排列元素顺序，并且会移除 `key` 不存在的元素。**有相同父元素的的子元素必须有独特的 key**。重复的 key 会造成渲染错误。
+
+##### Vue 修饰符 [:rocket:](#主要内容包含)
+
+###### 事件修饰符
+
+```
+- .stop <!-- 阻止单击事件继续传播 -->
+- .prevent <!-- 提交事件不再重载页面 -->
+- .capture <!-- 添加事件监听器时使用事件捕获模式 -->
+- .self <!-- 只当在 event.target 是当前元素自身时触发处理函数 -->
+- .once <!-- 点击事件将只会触发一次 -->
+- .passive
+- .native <!-- 给自定义的组件添加原生事件 -->
+```
+
+###### 按键修饰符
+
+```
+.enter
+.tab
+.delete <!-- 捕获“删除”和“退格”键 -->
+.esc
+.space
+.up
+.down
+.left
+.right
+```
+
+###### 系统修饰符
+
+```
+.ctrl
+.alt
+.shift
+.meta
+```
+
+###### 表单输入修饰符
+
+```
+.lazy: <input v-model.lazy="msg" ><!-- 在“change”时而非“input”时更新 -->
+.number: <input v-model.number="age"><!-- 将用户的输入值转为数值类型 -->
+.trim: <input v-model.trim="msg"><!-- 过滤用户输入的首尾空白字符 -->
+```
+
+##### Vue 关于 \$emit 的用法 [:rocket:](#主要内容包含)
+
+- 父组件可以使用 `props` 把数据传给子组件。
+- 子组件可以使用 `$emit` 触发父组件的自定义事件。
+  > vm.\$emit( event, […args] ) // 子组件通过 **\$emit** 来触发事件，将参数传递出去。
+
+##### javascript 工厂模式函数、构造函数、原型模式 [:rocket:](#主要内容包含)
+
+###### 工厂函数
+
+> 工厂模式中的函数中会创建一个对象，最后 `return` 这个对象，通过每次调用时传入的参数不同来 **解决创建多个相似对象的问题**。
+
+```javascript
+// 工厂模式
+function creatPerson(name, age, job) {
+  var o = {};
+  o.name = name;
+  o.age = age;
+  o.job = job;
+  o.sayName = function() {
+    console.log(this.name);
+  };
+  return o;
+}
+var tianjiao = creatPerson("tj", 22, "fe");
+console.log(tianjiao);
+```
+
+###### 构造函数
+
+> 构造函数本身也是函数，只不过是一个 **创建对象** 的函数
+
+```javascript
+// 构造函数
+function Person(name, age) {
+  this.name = name;
+  this.age = age;
+  this.sayName = function() {
+    console.log(this.name);
+  };
+}
+var tj2 = new Person("tj2", 23);
+console.log(tj2);
+```
+
+###### 原型模式
+
+> 每个函数都有一个 `prototype` 属性，这个属性是一个指针，指向一个对象，这个对象的好处是可以 **让所有对象实例共享他所包含的属性和方法**。
+
+```javascript
+// 原型方法
+function Person() {}
+Person.prototype.name = "tj3";
+Person.prototype.age = 24;
+Person.prototype.sayName = function() {
+  alert(this.name);
+};
+var tj3 = new Person();
+console.log(tj3);
+```
+
+##### 事件轮询机制 bind、apply、call 的区别 [:rocket:](#主要内容包含)
+
+`call` 和 `apply` 都是对函数的直接调用，**改变 this 指针指向即改变作用域**
+
+```javascript
+// 传参方式不一样，call必须将参数从第二位一个个塞进去
+call(obj, arg1, arg2, arg3);
+apply(obj, [arg1, arg2, arg3]);
+```
+
+```javascript
+function sum(num1, num2) {
+  return num1 + num2;
+}
+function callFun(a, b) {
+  return sum.call(this, a, b);
+}
+function applyFun(a, b) {
+  return sum.apply(this, [a, b]);
+  // 或者
+  // return sum.apply(this,arguments);
+}
+function bindFun(a, b) {
+  //bind 方法返回的仍然是一个函数
+  return sum.bind(this, a, b)();
+}
+alert(callFun(10, 10)); //20
+alert(applyFun(10, 10)); //20
+alert(bindFun(10, 10)); //20
+```
+
+###### 手写 call
+
+```javascript
+Funtion.prototype.mycall = function(context, ...args) {
+  const cxt = context ? Object(context) : window; // 返回 this 参数或者 window,this 参数可能为基本数据类型，通过 Object 转换一下
+  cxt.fn = this;
+  let res = cxt.fn(...args);
+  delete cxt.fn;
+  return res;
+};
+```
+
+###### 手写 apply
+
+```javascript
+Function.prototype.myapply = function(context, arr) {
+  const cxt = context ? Object(context) : window;
+  cxt.fn = this;
+  let res;
+  if (arr) res = cxt.fn(...arr);
+  else res = cxt.fn();
+  delete cxt.fn;
+  return res;
+};
+```
+
+###### 手写 bind
+
+```javascript
+Function.prototype.mybind = function(ctx, ...args) {
+  // return (...a)=> this.call(ctx, ...args, ...a);
+  return (...a) => this.apply(ctx, [...args, ...a]);
+};
+```
+
+测试脚本
+
+```javascript
+const w = { name: "wgc" };
+function testW() {
+  console.log(this.name);
+  console.log(...arguments);
+}
+const bindF = testW.mybind(w, "WGC");
+bindF("hello");
+testW.mycall(w, "nihao", "wgc");
+testW.myapply(w, ["NIHAO", "WGC"]);
+```
+
+##### 函数防抖、函数节流 [:rocket:](#主要内容包含)
+
+- 函数防抖：(任务触发的间隔超过指定间隔的时候，任务才会执行)
+  - 定义：多次触发事件后，事件处理函数只执行一次，并且是在触发操作结束时执行。
+  - 原理：对处理函数进行延时操作，若设定的延时到来之前，再次触发事件，则清除上一次的延时操作定时器，重新定时。
+  - 手写代码:
+  ```javascript
+  function debounce(fn, wait = 500) {
+    let timer = null;
+    return function() {
+      clearTimeout(timer);
+      timer = setTimeout(() => {
+        fn.apply(this, arguments);
+      }, wait);
+    };
+  }
+  ```
+- 函数节流：(指定时间间隔内只会执行一次任务)
+  - 定义：触发函数事件后，短时间间隔内无法连续调用，只有上一次函数执行后，过了规定的时间间隔，才能进行下一次的函数调用
+  - 原理：设置状态，对处理函数进行延时操作，若下一次事件触发设定的延时到来之前，状态还没更新，事件无效。
+  - 手写代码：
+  ```javascript
+  function throttle(fn, wait = 500) {
+    var timerStatus = true;
+    return function() {
+      if (!timerStatus) return;
+      timerStatus = false;
+      setTimeout(() => {
+        fn.apply(this, arguments);
+        timerStatus = true;
+      }, wait);
+    };
+  }
+  ```
+
+##### Vue 父子组件通过 props 传值示例 [:rocket:](#主要内容包含)
+
+```javascript
+var childNode = {
+  template:'<div>{{myMessage}}的类型是{{type}}</div>'，
+  props:{'myMessage':Number},
+  computed:{
+    type(){
+      return typeof this.myMessage;
+    }
+  }
+}
+var parentNode = {
+  template :`
+    <div class="parent">
+      <my-child :my-message="num"></my-child>
+    </div>`,
+  components:{
+    'myChild': childNode
+  },
+  data() {
+    return {
+      num: 1234567,
+    }
+  }
+}
+
+new Vue{(
+  el: '#app',
+  components: {
+    'Home': parentNode
+  }
+)}
+```
+
+##### Vue/React 组件间通信 [:rocket:](#主要内容包含)
+
+###### VUE
+
+- 兄弟组件：创建一个事件总线 `bus`
+  > 在需要传值的组件中用 `bus.$emit` 触发一个自定义事件，并传递参数  
+  > 在需要接收数据的组件中用 `bus.$on` 监听自定义事件，并在回调函数中处理传递过来的参数
+- 父向子传值：在组件中绑定属性，子组件中 `props` 就可以获取
+- 子向父传值：通过在子组件方法中调用`$emit(方法名, 参数)`,方法名父组件中用 `on` 绑定
+
+###### REACT
+
+- 兄弟组件：
+  > `context`（还可以很好的适用跨级传值，和 `Vue` 中的 `bus` 属性一样都应该是高作用域的参数）一个是 `Context` 生产者『 Provider 』，通常是一个父节点，另外是一个 `Context` 的消费者『 Consumer 』，通常是一个或者多个子节点。所以 `Context` 的使用基于生产者消费者模式
+- 父向子传值：在组件中绑定属性，子组件中 `props` 就可以获取
+- 子向父传值：通过在子组件方法中通过 `props` 获取方法名，回调的方式传值
+
+##### Vue 源码之 :checkered_flag: VNode [:rocket:](#主要内容包含)
+
+其实 `VNode` 是对真实 `DOM` 的一种抽象描述，它的核心定义无非就几个关键属性，标签名、数据、子节点、键值等，其它属性都是都是用来扩展 `VNode` 的灵活性以及实现一些特殊 `feature` 的。由于 `VNode` 只是用来映射到真实 `DOM` 的渲染，不需要包含操作 `DOM` 的用法，因此它是非常轻量和简单的。`VirtualDOM` 除了它的数据结构的定义，映射到真实的 `DOM` 实际上要经历 `VNode` 的 **_create_**、**_diff_**、**_patch_** 等过程。
+
+```javascript
+/**
+ * @param context 表示 VNode 的上下文环境，它是 Component 类型
+ * @param tag 表示标签，它可以是一个字符串，也可以是一个 Component
+ * @param data 表示 VNode 的数据，它是一个 VNodeData 类型
+ * @param children 表示当前 VNode 的子节点，它是任意类型的
+ * @param normalizationType 表示子节点规范的类型，类型不同规范的方法也就不一样，主要是参考 render 函数是编译生成还是用户手写的
+ */
+createElement (
+  context: Component,
+  tag?: string | Class<Component> | Function | Object,
+  data?: VNodeData,
+  children?: any,
+  normalizationType?: number
+){
+  // 生成 VNode 的过程...
+}
+```
+
+`Vue` 的 `update` 是实例的一个私有方法，被调用的时机有两个，一个是首次渲染，一个是数据更新的时候。`update` 方法的作用是把 `VNode` 渲染成真实的 `DOM`。
+
+update 的核心就是调用 `vm.patch` 方法，这个方法在不同平台（服务器端、浏览器端）的定义是不一样的
+
+```javascript
+update (vnode: VNode, hydrating?: boolean)
+```
+
+##### Vue 源码之 :checkered_flag: 响应式对象 [:rocket:](#主要内容包含)
+
+**核心是利用 ES5 的 Object.defineProperty**,这也是 `Vue.js` 为什么不能兼容 `IE8` 及以下浏览器的原因。
+
+`Object.defineProperty` 方法会直接在一个对象上定义一个新属性，或者修改一个对象的现有属性，并返回这个对象。
+
+```javaScript
+Object.defineProperty(
+  obj, // 定义属性的对象
+  prop, // 要定义或修改的属性的名称
+  descriptor, // 将被定义或修改属性的描述符【核心】
+)
+```
+
+> **observe** 的功能就是用来监测数据的变化。实现方式是给非 `VNode` 的对象类型数据添加一个 `Observer`,如果已经添加过则直接返回，否则在满足一定条件下去实例化一个 `Observer` 对象实例。
+
+Observer 是一个类,它的作用是给对象属性添加 『 getter 』和『 setter 』,用于 **依赖收集** 和 **派发更新**
+
+---
+
+**依赖收集 getter**（重点关注以下两点）
+
+- `*const dep = new Dep() // 实例化一个Dep实例`
+- `*在 get 函数中通过 dep.depend 做依赖收集`
+
+`Dep` 是一个 `Class`,它定义了一些属性和方法，它有一个静态属性 `target`，这是一个全局唯一 `Watcher`(同一时间内只能有一个全局的 `Watcher` 被计算)`。Dep` 实际上就是对 `Watcher` 的一种管理，`Dep` 脱离 `Watcher` 单独存在是没有意义的。`Watcher` 和 `Dep` 就是典型的 观察者设计模式，也叫做 [发布-订阅模式](./README.md#5发布-订阅模式)。
+
+`Watcher` 是一个 `Class`,在它的构造函数中定义了一些和 `Dep` 相关的属性：
+
+```javascript
+this.deps = [];
+this.newDeps = [];
+this.depIds = new Set();
+this.newDepIds = new Set();
+```
+
+**收集过程**：当我们实例化一个渲染 `watcher` 的时候，首先进入 `watcher` 的构造函数逻辑，然后执行他的`this.get()`方法，进入 `get` 函数把 `Dep.target` 赋值为当前渲染 `watcher` 并压栈（为了恢复用）。接着执行`vm._render()`方法，生成渲染 `VNode`,并且在这个过程对 `vm` 上的数据访问，这个时候就触发数据对象的 `getter`（在此期间执行`Dep.target.addDep(this)`方法，将 `watcher` 订阅到这个数据持有的 `dep` 的 `subs` 中，为后续数据变化时通知到哪些 `subs` 做准备）。然后递归遍历添加所有子项的 `getter。`
+
+> `Watcher` 在构造函数中初始化两个 `Dep` `实例数组。newDeps` 代表新添加的 `Dep` 实例数组，`deps` 代表上一次添加的 `Dep` 实例数组。  
+> 依赖清空：在执行清空依赖（`cleanupDeps`）函数时，会首先遍历 `deps`,移除对 `dep` 的订阅，然后把 `newDepsIds` 和 `depIds` 交换，`newDeps` 和 `deps` 交换，并把 `newDepIds` 和 `newDeps` 清空。考虑场景，在条件渲染时，及时对不需要渲染数据的订阅移除，减少性能浪费。
+
+考虑到 Vue 是数据驱动的，所以每次数据变化都会重写 Render,那么`vm._render()`方法会再次执行，并再次触发数据。
+
+收集依赖的目的是为了当这些响应式数据发生变化，触发它们的 setter 的时候，能知道应该通知哪些订阅者去做相应的逻辑处理【**派发更新**】
+
+---
+
+**派发更新 setter**（重点关注以下两点）
+
+- `*childOb = !shallow && observe(newVal) // 如果shallow为false的情况，会对新设置的值变成一个响应式对象`
+- `*dep.notify() // 通知所有订阅者`
+
+**派发过程**：当我们组件中对响应的数据做了修改，就会触发 `setter` 的逻辑，最后调用`dep.notify()`方法，它是 `Dep` 的一个实例方法。具体做法是遍历依赖收集中建立的 `subs`，也就是 `Watcher` 的实例数组【`subs` 数组在依赖收集 `getter` 中被添加，期间通过一些逻辑处理判断保证同一数据不会被添加多次】，然后调用每一个 `watcher` 的 `update` 方法。
+
+`update` 函数中有个`queueWatcher(this)`方法引入了队列的概念，是 `vue` 在做派发更新时优化的一个点，它并不会每次数据改变都会触发 `watcher` 回调，而是把这些 `watcher` 先添加到一个队列中，然后在 nextTick 后执行 `watcher` 的 `run` 函数
+**队列排序保证：**
+
+1. 组件的更新由父到子。父组件创建早于子组件，`watcher` 的创建也是
+2. 用户自定义 `watcher` 要早于渲染 `watcher` 执行，因为用户自定义 `watcher` 是在渲染 `watcher` 前创建的
+3. 如果一个组件在父组件 `watcher` 执行期间被销毁，那么它对应的 `watcher` 执行都可以被跳过，所以父组件的 `watcher` 应该先执行。
+
+- 队列遍历：排序完成后，对队列进行遍历，拿到对应的 `watcher`,执行`watcher.run()`。
+
+**run 函数解析**：先通过`this.get()`得到它当前的值，然后做判断，如果满足新旧值不等、新值是对象类型、deep 模式任何一个条件，则执行 `watcher` 的回调，注意回调函数执行的时候会把第一个参数和第二个参数传入新值 `value` 和旧值 `oldValue`。<u>_这就是当我们自己添加 watcher 时候可以在参数中取到新旧值的来源_</u>。对应渲染 `watcher` 而言，在执行`this.get()`方法求值的时候，会执行 `getter` 方法。因此在我们修改组件相关数据时候，会触发组件重新渲染，接着重新执行 `patch` 的过程
+
+---
+
+### 手写一个数据绑定：
+
+```javascript
+<input id="input" type="text" />
+<div id="text"></div>
+
+let input = document.getElementById("input");
+let text = document.getElementById("text");
+let data = { value: "" };
+Object.defineProperty(data, "value", {
+  set: function(val) {
+    text.innerHTML = val;
+    input.value = val;
+  },
+  get: function() {
+    return input.value;
+  }
+});
+input.onkeyup = function(e) {
+  data.value = e.target.value;
+};
+```
