@@ -1368,7 +1368,7 @@ new Vue{(
 - 父向子传值：在组件中绑定属性，子组件中 `props` 就可以获取
 - 子向父传值：通过在子组件方法中通过 `props` 获取方法名，回调的方式传值
 
-#### Vue 源码之 :checkered_flag: VNode [:rocket:](#主要内容包含)
+#### Vue2.0 源码之 :checkered_flag: VNode [:rocket:](#主要内容包含)
 
 其实 `VNode` 是对真实 `DOM` 的一种抽象描述，它的核心定义无非就几个关键属性，标签名、数据、子节点、键值等，其它属性都是都是用来扩展 `VNode` 的灵活性以及实现一些特殊 `feature` 的。由于 `VNode` 只是用来映射到真实 `DOM` 的渲染，不需要包含操作 `DOM` 的用法，因此它是非常轻量和简单的。`VirtualDOM` 除了它的数据结构的定义，映射到真实的 `DOM` 实际上要经历 `VNode` 的 **_create_**、**_diff_**、**_patch_** 等过程。
 
@@ -1399,7 +1399,7 @@ update 的核心就是调用 `vm.patch` 方法，这个方法在不同平台（�
 update (vnode: VNode, hydrating?: boolean)
 ```
 
-#### Vue 源码之 :checkered_flag: 响应式对象 [:rocket:](#主要内容包含)
+#### Vue2.0 源码之 :checkered_flag: 响应式对象 [:rocket:](#主要内容包含)
 
 **核心是利用 ES5 的 Object.defineProperty**,这也是 `Vue.js` 为什么不能兼容 `IE8` 及以下浏览器的原因。
 
@@ -1488,3 +1488,346 @@ input.onkeyup = function(e) {
   data.value = e.target.value;
 };
 ```
+
+#### Vue2.0 源码之 :checkered_flag: NextTick [:rocket:](#主要内容包含)
+
+JS 执行是单线程的，它基于`事件循环`。事件大致分为以下几个步骤：
+
+1. 所有同步任务都是在主线程上执行，形成一个执行栈。
+2. 主线程之外，还存在一个『 任务队列 』。只要异步任务有了运行结果，就在『 任务队列 』中放置一个事件。
+3. 一旦执行栈中所有同步任务执行完毕，系统就会读取『 任务队列 』，看看里面有哪些事件。那些对应的异步执行任务就会结束等待状态，进入执行栈，开始执行。
+4. 主线程不断重复上面操作。
+
+> 结合 `setter` 分析，数据的变化到 `Dom` 的重新渲染是一个异步的过程，发生在下一个 `tick`。开发过程中，比如在服务端接口异步获取数据时候，如果某些方法是依赖数据修改后的 `DOM`，就必须将方法写在 `nextTick` 后执行。
+
+```javascript
+getNames(res).then(() => {
+  this.userNames = res.data;
+  console.log(this.$refs.userNames); // userNames并没有被更新
+  this.$nextTick(() => {
+    console.log(this.$refs.userNames); // 获取渲染更新后的userNames
+  });
+});
+```
+
+> 就在今天，2.0 刚刚整理完毕，3.0 正式推出。:point_right:[快乐就完事了](https://vue-composition-api-rfc.netlify.com/#api-introduction):point_left:
+
+#### macro/micro task 宏任务、微任务 [:rocket:](#主要内容包含)
+
+浏览器为了能够使 `JS` 内部 `macro task` 与 `DOM` 任务能有序的执行，会在一个 `macro task` 执行结束后，在下一个 `macro task` 执行开始前，队列没进行重新渲染；
+
+> 执行顺序：**_macro task_** --> **_渲染 DOM_** --> **_macro task_**
+
+- 宏任务（macro task）主要包含：
+  - script
+  - setTimeout
+  - setInterval
+  - I/O、UI 交互事件
+  - postMessage
+  - MessageChannel
+  - setImmediate(Node.js)
+
+微任务`micro task`：可以理解是当前 `task` 执行结束后立即执行的任务，也就是在 `macro task` 和 `渲染 DOM`之间执行的内容。
+
+- 微任务（micro task）主要包括：
+  - Promise.then
+  - MutaionObserver
+  - process.nextTick(Node.js)
+
+#### 深度遍历 [:rocket:](#主要内容包含)
+
+```javascript
+// 方案一
+let deepTraversal1 = (node, nodeList = []) => {
+  if (node !== null) {
+    nodeList.push(node);
+    let children = node.children || [];
+    for (let i = 0; i < children.length; i++) {
+      deepTraversal1(children[i], nodeList);
+    }
+  }
+  console.log(nodeList);
+  return nodeList;
+};
+```
+
+```javascript
+// 方案二
+let deepTraversal2 = node => {
+  let nodes = [];
+  if (node !== null) {
+    nodes.push(node);
+    let children = node.children || [];
+    for (let i = 0; i < children.length; i++) {
+      nodes = nodes.concat(deepTraversal2(children[i]));
+    }
+  }
+  console.log(nodes);
+  return nodes;
+};
+```
+
+```javascript
+// 方案三。非递归
+let deepTraversal3 = node => {
+  let stack = [];
+  let nodes = [];
+  if (node) {
+    // 推入当前处理的node
+    stack.push(node);
+    while (stack.length) {
+      let item = stack.pop();
+      let children = item.children || [];
+      nodes.push(item);
+      // nodes = [] stack = [parent]
+      // nodes = [parent] stack = [child3,child2,child1]
+      // nodes = [parent, child1] stack = [child3,child2,child1-2,child1-1]
+      // nodes = [parent, child1-1] stack = [child3,child2,child1-2]
+      for (let i = children.length - 1; i >= 0; i--) {
+        stack.push(children[i]);
+      }
+    }
+  }
+  console.log(nodes);
+  return nodes;
+};
+```
+
+#### 广度遍历 [:rocket:](#主要内容包含)
+
+```javascript
+let widthTraversal = node => {
+  let nodes = [];
+  let stack = [];
+  if (node) {
+    stack.push(node);
+    while (stack.length) {
+      let item = stack.shift();
+      let children = item.children || [];
+      nodes.push(item);
+      // 队列，先进先出
+      // nodes = [] stack = [parent]
+      // nodes = [parent] stack = [child1,child2,child3]
+      // nodes = [parent, child1] stack = [child2,child3,child1-1,child1-2]
+      // nodes = [parent,child1,child2]
+      for (let i = 0; i < children.length; i++) {
+        stack.push(children[i]);
+      }
+    }
+  }
+  console.log(nodes);
+  return nodes;
+};
+```
+
+#### JS 异步解决方案的发展历程以及优缺点 [:rocket:](#主要内容包含)
+
+**1.回调函数 callback**
+
+```javascript
+setTimeout(() => {
+  // callback 函数体
+}, 1000);
+```
+
+缺点：回调地狱，不能用 `try catch` 捕获错误，不能 `return`
+优点：解决了同步问题
+
+---
+
+**2.Promise**
+
+```javascript
+ajax("XXX1")
+  .then(res => {
+    // 操作逻辑
+    return ajax("XXX2");
+  })
+  .then(res => {
+    // 操作逻辑
+    return ajax("XXX3");
+  })
+  .then(res => {
+    // 操作逻辑
+  });
+```
+
+缺点：无法取消 `promise`，错误需要通过 `catch` 回调函数来捕获
+优点：解决了回调地狱
+
+---
+
+**3.Generator**
+
+```javascript
+function* fetch() {
+  yield ajax("XXX1", () => {});
+  yield ajax("XXX2", () => {});
+  yield ajax("XXX3", () => {});
+}
+let it = fetch();
+let result1 = it.next();
+let result2 = it.next();
+let result3 = it.next();
+```
+
+优点：可以控制函数的执行
+
+---
+
+**4.Async/await 异步的终极解决方案**
+
+```javascript
+async function test() {
+  // 以下代码没有依赖性的话，完全可以使用 Promise.all 的方式
+  // 如果有依赖性的话，其实就是解决回调地狱的例子了
+  await fetch("XXX1");
+  await fetch("XXX2");
+  await fetch("XXX3");
+}
+```
+
+优点：代码清晰，处理了回调地狱，不用写一大堆 `then` 回调
+缺点：将异步代码改造为回调，如果多个异步之间没有依赖会降低性能
+
+#### 手写 Promise.all/race [:rocket:](#主要内容包含)
+
+```javascript
+// 先了解用途和原理再熟悉代码
+Promise._all = list =>
+  new Promise((resolve, reject) => {
+    let resP = [];
+    let count = 0;
+    list.forEach((index, pro) => {
+      resolve(pro).then(
+        res => {
+          count++;
+          resP[index] = res;
+          if (count === list.length) resove(resP);
+        },
+        err => {
+          reject(err);
+        }
+      );
+    });
+  });
+Promise._race = list = new Promise((resolve, reject) => {
+  list.forEach(pro => {
+    pro.then(resove, reject);
+  });
+});
+```
+
+#### HTTP2 多路复用 [:rocket:](#主要内容包含)
+
+`HTTP2` 采用二进制格式传输，取代了 `HTTP1` 的文本格式，二进制解析更高效。多路复用代替了 `HTTP1` 的序列和阻塞机制，所有相同域名下的请求都在统一 `TCP` 连接并发完成。在 `HTTP1` 中，每一个请求需要建立一个 `TCP` 链接。`HTTP2` 中：
+
+- 同域名下所有通信都在同一 `TCP` 连接下完成，消除了多个 `TCP` 连接带来的延时和内存消耗。
+- 单个连接可以并行交错的请求和响应，之间互不干扰。
+
+#### 回流和重绘（reflow，repaint） [:rocket:](#主要内容包含)
+
+##### 回流：
+
+> 当 `render tree` 中的一部分或全部因为元素的规模尺寸，布局，隐藏等改变而需要重新构建。这就称为回流。
+
+##### 重绘：
+
+> 当 `render tree` 中的一些元素需要更新属性，而这些属性只是影响元素的外观，风格，而不会影响布局的，比如 `background-color`。则就叫称为重绘。
+
+回流一定会发生重绘，而重绘不一定有回流（比如元素颜色改变、滚动条滑动）
+
+##### 减少重绘与回流：
+
+- CSS:
+  - 使用 transform 替代 top
+  - 使用 visibility 替换 display: none
+  - 避免使用 table 布局
+  - 避免设置多层内联样式
+  - 避免使用 CSS 表达式
+  - ......
+- JavaScript
+  - 避免频繁操作样式
+  - 避免频繁操作 DOM
+  - 对复杂动画脱离文档流使用绝对定位
+
+#### React 中 setState 更新数据 [:rocket:](#主要内容包含)
+
+```javascript
+class Example extends React.Component {
+  constructor() {
+    super();
+    this.state = {
+      val: 0
+    };
+  }
+  componentDidMount() {
+    this.setState({ val: this.state.val + 1 });
+    // 第 1 次 log
+    console.log(this.state.val);
+    this.setState({ val: this.state.val + 1 });
+    // 第 2 次 log
+    console.log(this.state.val);
+    setTimeout(() => {
+      this.setState({ val: this.state.val + 1 });
+      // 第 3 次 log
+      console.log(this.state.val);
+      this.setState({ val: this.state.val + 1 });
+      // 第 4 次 log
+      console.log(this.state.val);
+    }, 0);
+  }
+  render() {
+    return null;
+  }
+}
+// 结果 0 0 2 3；
+```
+
+在 React 中，两种调用 `this.setState` 的方式：
+
+> a.通过 `addEventListener` 引发的事物处理（比如 `onClick` 引发的)。  
+> b.通过 `setTimeout`/`setInterval` 产生的异步调用。
+
+在 `setState` 的实现中，会根据一个变量 `isBatchingUpdates` 判断是直接更新 `this.state` 还是放到 `task` 中下次再说。以上两种情况：
+
+a 情况是放到下次队列中合并 `setState` 一起执行，产生异步执行。
+b 情况会同步执行 `setState`
+
+#### 对比 Redux 和 Vuex [:rocket:](#主要内容包含)
+
+**Flux**
+
+> View --> Action --> Dispatcher --> state --> View
+
+**Redux**
+
+> View --> action --> Reducer --> state --> View(同步异步一样)
+
+**Vuex**
+
+> View --> commit --> mutations --> state --> View(同步)  
+> View --> dispatch --> action --> mutations --> state --> View(异步)
+
+**共同点**
+首先两者都是处理全局状态的工具库，大致实现思想都是：
+
+> _全局 state 保存状态_ --> _dispatch(action)_ --> _reducer(Vuex 里的 mutation)_ --> _生成 newState_;
+
+整个状态为同步操作。
+
+**区别**
+最大的区别在于处理异步的不同，『 Vuex 』里面多了一步 `commit` 操作，在 `action` 之后 `commit(mutation)`之前处理异步，而 『 redux 』里面则是通过中间件处理
+
+#### Vue/React 的 diff 优化 [:rocket:](#主要内容包含)
+
+优化的表现为：**时间复杂度从 O(N<sup>3</sup>)降到 O(N)**
+
+React 和 Vue 做的假设是：
+
+- 检测 VDOM 的变化只发生在同一层
+- 检测 VDOM 的变化依赖于用户指定的 `key`
+
+> 如果变化发生在不同层或者同样的元素用户指定了不同的 `key` 或者不同元素用户指定同样的 `key`，React 和 Vue 都不会检测到，就会发生莫名其妙的问题。
+
+但是 React 认为，前端碰到上面的第一种情况概率很小，第二种情况又可以通过提示用户，让用户去解决，因此这个取舍是值得的。没有牺牲空间复杂度，却换来了在大多数情况下时间上的巨大提升。
