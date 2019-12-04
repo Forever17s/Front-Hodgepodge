@@ -1516,7 +1516,7 @@ getNames(res).then(() => {
 
 浏览器为了能够使 `JS` 内部 `macro task` 与 `DOM` 任务能有序的执行，会在一个 `macro task` 执行结束后，在下一个 `macro task` 执行开始前，队列没进行重新渲染；
 
-> 执行顺序：**_macro task_** --> **_渲染 DOM_** --> **_macro task_**
+> 执行顺序：_macro task_ --> _渲染 DOM_ --> _macro task_
 
 - 宏任务（macro task）主要包含：
   - script
@@ -1622,7 +1622,7 @@ let widthTraversal = node => {
 
 #### JS 异步解决方案的发展历程以及优缺点 [:rocket:](#主要内容包含)
 
-**1.回调函数 callback**
+##### 1.回调函数 callback
 
 ```javascript
 setTimeout(() => {
@@ -1635,7 +1635,7 @@ setTimeout(() => {
 
 ---
 
-**2.Promise**
+##### 2.Promise
 
 ```javascript
 ajax("XXX1")
@@ -1657,7 +1657,7 @@ ajax("XXX1")
 
 ---
 
-**3.Generator**
+##### 3.Generator
 
 ```javascript
 function* fetch() {
@@ -1675,7 +1675,7 @@ let result3 = it.next();
 
 ---
 
-**4.Async/await 异步的终极解决方案**
+##### 4.Async/await 异步的终极解决方案
 
 ```javascript
 async function test() {
@@ -1693,7 +1693,47 @@ async function test() {
 #### 手写 Promise.all/race [:rocket:](#主要内容包含)
 
 ```javascript
-// 先了解用途和原理再熟悉代码
+// Promise.all/race 的使用示例
+function test(num) {
+  return new Promise((resolve, reject) => {
+    if (num < 5) {
+      setTimeout(() => {
+        resolve(`执行成功${num}小于5`);
+      }, 1000);
+    }
+    if (num > 5) {
+      setTimeout(() => {
+        reject(`执行失败${num}大于5`);
+      }, 500);
+    }
+  });
+}
+let p1 = test(3);
+let p2 = test(8);
+let p3 = Promise.reject("执行结束");
+
+Promise.all([p1, p2])
+  .then(result => {
+    console.log(result);
+  })
+  .catch(error => {
+    console.error(error); // 执行失败8大于5
+  });
+
+Promise.race([p1, p3, p2])
+  .then(result => {
+    console.log(result);
+  })
+  .catch(error => {
+    console.error(error); // 执行结束
+  });
+```
+
+> `Promise.all` 可以将多个 `Promise` 实例包装成一个新的 `Promise` 实例。同时，成功和失败的返回值是不同的，成功的时候返回的是一个结果数组，而失败的时候则返回最先被 reject 失败状态的值。
+
+> `Promse.race` 就是赛跑的意思，意思就是说，`Promise.race([p1, p2, p3])`里面哪个结果获得的快，就返回那个结果，不管结果本身是成功状态还是失败状态。
+
+```javascript
 Promise._all = list =>
   new Promise((resolve, reject) => {
     let resP = [];
@@ -1796,27 +1836,29 @@ b 情况会同步执行 `setState`
 
 #### 对比 Redux 和 Vuex [:rocket:](#主要内容包含)
 
-**Flux**
+##### Flux
 
 > View --> Action --> Dispatcher --> state --> View
 
-**Redux**
+##### Redux
 
 > View --> action --> Reducer --> state --> View(同步异步一样)
 
-**Vuex**
+##### Vuex
 
 > View --> commit --> mutations --> state --> View(同步)  
 > View --> dispatch --> action --> mutations --> state --> View(异步)
 
-**共同点**
+##### 共同点
+
 首先两者都是处理全局状态的工具库，大致实现思想都是：
 
 > _全局 state 保存状态_ --> _dispatch(action)_ --> _reducer(Vuex 里的 mutation)_ --> _生成 newState_;
 
 整个状态为同步操作。
 
-**区别**
+##### 区别
+
 最大的区别在于处理异步的不同，『 Vuex 』里面多了一步 `commit` 操作，在 `action` 之后 `commit(mutation)`之前处理异步，而 『 redux 』里面则是通过中间件处理
 
 #### Vue/React 的 diff 优化 [:rocket:](#主要内容包含)
@@ -1831,3 +1873,96 @@ React 和 Vue 做的假设是：
 > 如果变化发生在不同层或者同样的元素用户指定了不同的 `key` 或者不同元素用户指定同样的 `key`，React 和 Vue 都不会检测到，就会发生莫名其妙的问题。
 
 但是 React 认为，前端碰到上面的第一种情况概率很小，第二种情况又可以通过提示用户，让用户去解决，因此这个取舍是值得的。没有牺牲空间复杂度，却换来了在大多数情况下时间上的巨大提升。
+
+### 前端常识
+
+#### 前端登录需要处理的流程 [:ledger:](#主要内容包含)
+
+1. 登录前发送一个 GET 请求拿到一个验证码
+2. 通过验证码进行加密账号密码发送 POST
+3. 后端通过验证码解密账号密码通过返回 token 存入缓存。
+4. 页面跳转前读取用户信息。如果没有用户信息（第一次登录和刷新页面），通过 token 拉取用户信息存储。
+5. 用户信息等存 session（刷新页面保证用户信息最新性）。通过用户权限重写路由信息。
+6. 如果通过 token 过期，发送请求 401，重定向到登录页面重新登录
+
+> 以上是本人在项目登录实现上的一些总结，仅代表个人建议。token 超时的判定可以根据项目需求做逻辑判定，加密推荐使用 [crypto-js](https://github.com/brix/crypto-js)
+
+#### HTTP 缓存机制 [:ledger:](#主要内容包含)
+
+##### 强制缓存
+
+> 服务器通知浏览器一个缓存时间，在缓存时间内，下次请求直接使用缓存，不在就执行比较缓存策略。
+
+##### 比较缓存
+
+> 将缓存信息中的 Etag 和 Last-Modified 通过请求发给服务器，由服务器校验，返回 304 状态码时候，浏览器直接启用缓存
+
+#### HTTP 常见状态码 [:ledger:](#主要内容包含)
+
+- 2 \*\*：成功
+  - 200：一切 ok
+- 3 \*\*：重定向
+  - 301：永久重定向
+  - 302：临时重定向
+  - 304：之前缓存的
+- 4 \*\*：客户端错误
+  - 400：请求语法有误
+  - 401：没有认证，token 失效
+  - 403：对应资源禁止访问
+  - 404：找不到对应资源
+- 5 \*\*：服务端错误
+  - 500：服务器内部错误
+  - 503：服务器挂了
+
+#### 常见 HTTP 的 Header [:ledger:](#主要内容包含)
+
+```bash
+
+content-type # 请求字段格式/类型
+connection # tcp 长链接
+Keep-Alive: # 长链接时长
+referer # 请求来源
+accept # 接收 reponse 数据类型
+Accept-Encoding # 接收内容压缩类型
+Accept-Language # 接收语言
+cookie # 发送请求时会把同域名下的 cookie 发送过去
+```
+
+#### 第一方 cookie 和第三方 cookie [:ledger:](#主要内容包含)
+
+##### 第一方 Cookie 的优势和应用：
+
+> 第一方 Cookie 的最大优势是接受率高。一般主流的浏览器的都会有隐私的设置，可以让用户设置是否接受 Cookie，接受哪些 Cookie。除了 完全不接受 Cookie 这个设置以外，其他情况下，第一方 Cookie 都是会被用户接受的（不接受的话，是没办法把那小块数据保存下来的）。所以，如果没有特殊要求，使用第一方 Cookie 会比第三方 Cookie，我们通过分析工具得到的数据会更准确。
+
+##### 第三方 Cookie 的优势和应用：
+
+> 第三方 Cookie 的接受率不如第一方 Cookie（不过主流的浏览器默认的设置下也接受带 P3P 协议的第三方 Cookie，我的经验是接受率能达 到 90％，甚至 95％以上），但在某些特定情况下可以实现第一方 Cookie 无法实现的功能。比如，当我们有多个域名的网站需要跟踪，我们希望了解到用户点击某个广告到达域名 A 下的网页，然后可能浏览了不论那个域名下的页面，最后在域名 B 下的网页完成注册的情况。广告可以在域名 A 下的网页被跟踪到，而注册可以在域名 B 下的网页跟踪到。如果我们使用第一方 Cookie，会为域名 A 建立一个 Cookie，为域名 B 再建立一个 Cookie，他们可以关联各自域名下网页上的行为，但是无法关联起来。而使用第三方 Cookie，那么无论多少个域，都只有一个 Cookie，一个属于第三方域的 Cookie，网站下所有域都能共享这个 Cookie，那么所有的行为都能被关联起来分析。
+
+#### CSRF 攻击实例 [:ledger:](#主要内容包含)
+
+CSRF 跨站域请求伪造 **_Cross Site Request Forgery_**
+
+> CSRF 攻击可以在受害者毫不知情的情况下以受害者名义伪造请求发送给受攻击站点，从而在并未授权的情况下执行在权限保护之下的操作。
+
+比如说，受害者 Bob 在银行有一笔存款，通过对银行的网站发送请求 `http://bank.example/withdraw?account=bob&amount=1000000&for=bob2`可以使 Bob 把 1000000 的存款转到 bob2 的账号下。通常情况下，该请求发送到网站后，服务器会先验证该请求是否来自一个合法的 session，并且该 session 的用户 Bob 已经成功登陆。黑客 Mallory 自己在该银行也有账户，他知道上文中的 URL 可以把钱进行转帐操作。Mallory 可以自己发送一个请求给银行：`http://bank.example/withdraw?account=bob&amount=1000000&for=Mallory`。但是这个请求来自 Mallory 而非 Bob，他不能通过安全认证，因此该请求不会起作用。这时，Mallory 想到使用 CSRF 的攻击方式，他先自己做一个网站，在网站中放入如下代码： `src=”http://bank.example/withdraw?account=bob&amount=1000000&for=Mallory ”`，并且通过广告等诱使 Bob 来访问他的网站。当 Bob 访问该网站时，上述 url 就会从 Bob 的浏览器发向银行，而这个请求会附带 Bob 浏览器中的 cookie 一起发向银行服务器。大多数情况下，该请求会失败，因为他要求 Bob 的认证信息。但是，如果 Bob 当时恰巧刚访问他的银行后不久，他的浏览器与银行网站之间的 session 尚未过期，浏览器的 cookie 之中含有 Bob 的认证信息。这时，悲剧发生了，这个 url 请求就会得到响应，钱将从 Bob 的账号转移到 Mallory 的账号，而 Bob 当时毫不知情。等以后 Bob 发现账户钱少了，即使他去银行查询日志，他也只能发现确实有一个来自于他本人的合法请求转移了资金，没有任何被攻击的痕迹。而 Mallory 则可以拿到钱后逍遥法外。
+
+#### 当前防御 CSRF 的几种策略 [:ledger:](#主要内容包含)
+
+在业界目前防御 CSRF 攻击主要有三种策略：
+
+- 验证 HTTP `Referer` 字段；(同域访问，在不同浏览器环境下，有些方法可以篡改 `referer` 的值)
+- 在请求地址中添加 token 并验证；(a 和 form 标签中加 token，黑客可以通过 `referer` 方式获得 token)
+- 在 HTTP 头中自定义属性并验证。(把验证加入到 http 头部的自定义属性(`Authorization`)中去。通过 `XMLHttpRequest` 类可以添加。在非 [SPA](https://baike.baidu.com/item/SPA/17536313?fr=aladdin) 中实现中 `进行前进` `、后退` `、刷新` 、`收藏` 等操作不是由这个类发起的，失去效果。代价太大)
+
+#### XSS 跨站脚本攻击 [:ledger:](#主要内容包含)
+
+XSS 又叫 CSS (**Cross Site Script**)，指的是恶意攻击者往 Web 页面里插入恶意 html 代码，当用户浏览该页之时，嵌入其中 Web 里面的 html 代码会被执行，从而达到恶意用户的特殊目的。
+
+可以分成三类:
+
+- 反射型：经过后端，不经过数据库(一般表现为带 XSS 攻击向量的链接，非持久性攻击)
+- 存储型：经过后端，经过数据库(将攻击代码存入数据库中)
+- DOM：不经过后端,DOM - based XSS 漏洞是基于文档对象模型 (Document Objeet Model,DOM)的一种漏洞,dom - xss 是通过 url 传入参数去控制触发的。(用户通过交互进行攻击)
+  也可以分成两种类型：
+  - 1.非持久型攻击
+  - 2.持久型攻击
