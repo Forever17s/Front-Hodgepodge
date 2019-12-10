@@ -20,3 +20,82 @@
 | 即使离线也可以提交                     | 只允许在线提交                     |
 | `push` / `pull` 操作更快               | `push` / `pull` 操作较慢           |
 | 工程可以用 `commit` 自动共享           | 没有任何东西自动共享               |
+
+### Git 基础命令
+
+<div align=center>
+
+常见的 `gitFlow` 场景为
+
+![](./../resource/interview_gitFlow.png)
+
+</div>
+
+> - Workspace：工作区
+> - Index / Stage：暂存区
+> - Repository：仓库区（或本地仓库）
+> - Remote：远程仓库
+
+**命令简介**
+
+```bash
+# 新建一个目录，将其初始化为Git代码库
+$ git init [project-name]
+
+# 下载一个项目和它的整个代码历史
+$ git clone [url]
+
+# 添加当前目录的所有文件到暂存区
+$ git add .
+
+# 提交暂存区到仓库区
+$ git commit -m [message]
+
+# 拉取远程仓库的变化
+$ git pull
+
+# 上传本地commit到当前分支
+$ git push
+
+# 强行推送当前分支到远程仓库，即使有冲突。慎用
+$ git push [remote] --force
+
+# 下载远程仓库的所有变动
+$ git fetch [remote]
+
+# 列出所有本地分支
+$ git branch
+
+# 新建一个分支，并切换到该分支
+$ git checkout -b [branch]
+
+# 切换到指定分支，并更新工作区
+$ git checkout [branch-name]
+
+# 删除分支
+$ git branch -d [branch-name]
+
+# 删除远程分支，往往需要操作权限
+$ git push origin --delete [branch-name]
+
+# 合并指定分支到当前分支
+$ git merge [branch]
+
+# 选择一个commit，合并进当前分支
+$ git cherry-pick [commit]
+
+# 暂时将未提交的变化移入缓存。拉代码时候解决冲突很好用
+$ git stash
+
+# 将最近一次缓存的代码恢复
+$ git stash pop
+
+# 显示有变更的文件
+$ git status
+
+# 显示当前分支的版本历史
+$ git log
+
+# 显示指定文件是什么人在什么时间修改过
+$ git blame [file]
+```
