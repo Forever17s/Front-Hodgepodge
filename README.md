@@ -140,6 +140,10 @@
 
 - Git & SVN
 - Git 基础命令
+- git reset、git revert 和 git checkout 的区别
+- 关于 git rebase
+- Git 修改 commit message
+- Git 撤销已经推送至远端仓库的提交信息
 
 ### 其它
 
