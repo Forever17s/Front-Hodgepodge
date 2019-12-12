@@ -61,6 +61,7 @@
 - 循环中创建闭包：一个常见的错误
 - 时间戳 getTime()
 - 截取字符串 slice/splice/substr/substring(n,m)
+- localStorage，sessionStorage 和 cookies 的区别
 - JS 设置 cookie
 - 简述面向对象
 - Number/JSON
@@ -79,6 +80,7 @@
 - BFC 布局 （块级格式化上下文）
 - CSS 实现三角形
 - CSS 垂直水平居中
+- 权重计算规则
 - 浏览器渲染原理
 
 ---
@@ -135,6 +137,7 @@
 - CSRF 攻击实例
 - 当前防御 CSRF 的几种策略
 - XSS 跨站脚本攻击
+- MVVM 和 MVC 的区别
 
 #### [前端物语 - Git](./interview/前端物语-Git.md)
 
