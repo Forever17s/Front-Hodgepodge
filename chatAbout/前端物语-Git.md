@@ -2,7 +2,7 @@
 
 ## 前端物语 - Git
 
-  <img src="./../resource/interview_header.png" width="500" />
+  <img src="./../resource/chatAbout_header.png" width="500" />
 
 </div>
 

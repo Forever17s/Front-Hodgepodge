@@ -127,7 +127,7 @@
 
 ---
 
-#### [前端物语 - 常识](./interview/前端物语-常识.md)
+#### [前端物语 - 常识](./chatAbout/前端物语-常识.md)
 
 - 前端登录需要处理的流程
 - HTTP 缓存机制
@@ -139,7 +139,7 @@
 - XSS 跨站脚本攻击
 - MVVM 和 MVC 的区别
 
-#### [前端物语 - Git](./interview/前端物语-Git.md)
+#### [前端物语 - Git](./chatAbout/前端物语-Git.md)
 
 - Git & SVN
 - Git 基础命令
@@ -148,6 +148,12 @@
 - Git 修改 commit message
 - Git 撤销已经推送至远端仓库的提交信息
 
+#### [前端物语 - 开发规范](./chatAbout/前端物语-开发规范.md)
+
+- 命名规范
+
 ### 其它
+
+#### [设计原则 - Ant Design](https://ant.design/docs/spec/proximity-cn)
 
 #### [VS Code 插件及配置](./other/VSCode配置.md)
