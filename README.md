@@ -67,7 +67,7 @@
 - Number/JSON
 - attachEvent 和 addEventListener
 - Spread Operator 展开运算符
-- JS 部分简写 :checkered_flag: 逼格拔高
+- JS 部分简写『 逼格拔高 』:checkered_flag:
 
 #### [前端基础 - 丙篇](./interview/前端基础-丙.md)
 
@@ -105,9 +105,9 @@
 
 - Vue 父子组件通过 props 传值示例
 - Vue/React 组件间通信
-- Vue2.0 源码之 :checkered_flag: VNode
-- Vue2.0 源码之 :checkered_flag: 响应式对象
-- Vue2.0 源码之 :checkered_flag: NextTick
+- Vue 2.X 源码之『 VNode 』:checkered_flag:
+- Vue 2.X 源码之『 响应式对象 』:checkered_flag:
+- Vue 2.X 源码之『 NextTick 』:checkered_flag:
 - macro/micro task 宏任务、微任务
 - React 中 setState 更新数据
 - 对比 Redux 和 Vuex
@@ -151,6 +151,9 @@
 #### [前端物语 - 开发规范](./chatAbout/前端物语-开发规范.md)
 
 - 命名规范
+- 注释规范
+- HTML 书写规范
+- CSS、SCSS 书写规范
 
 ### 其它
 
