@@ -154,6 +154,7 @@
 - 注释规范
 - HTML 书写规范
 - CSS、SCSS 书写规范
+- JavaScript 书写规范
 
 ### 其它
 
