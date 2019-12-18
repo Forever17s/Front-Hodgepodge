@@ -160,4 +160,6 @@
 
 #### [设计原则 - Ant Design](https://ant.design/docs/spec/proximity-cn)
 
+#### [如何去做 Code Review - Google](https://github.com/google/eng-practices/blob/master/review/reviewer/index.md)
+
 #### [VS Code 插件及配置](./other/VSCode配置.md)
