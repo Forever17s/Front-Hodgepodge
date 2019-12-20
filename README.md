@@ -162,4 +162,6 @@
 
 #### [如何去做 Code Review - Google](https://github.com/google/eng-practices/blob/master/review/reviewer/index.md)
 
+#### [如何争取一次好的述职](./other/述职总结.md)
+
 #### [VS Code 插件及配置](./other/VSCode配置.md)
