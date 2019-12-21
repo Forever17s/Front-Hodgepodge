@@ -158,6 +158,8 @@
 
 ### 其它
 
+#### [ECMAScript 最新特性大盘点](./other/ECMAScript最新特性大盘点.md)
+
 #### [设计原则 - Ant Design](https://ant.design/docs/spec/proximity-cn)
 
 #### [如何去做 Code Review - Google](https://github.com/google/eng-practices/blob/master/review/reviewer/index.md)
