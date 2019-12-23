@@ -158,7 +158,7 @@
 
 ### 其它
 
-#### [ECMAScript 最新特性大盘点](./other/ECMAScript最新特性大盘点.md)
+#### [ECMAScript 最新特性大盘点](./other/ECMAScript新特性.md)
 
 #### [设计原则 - Ant Design](https://ant.design/docs/spec/proximity-cn)
 
