@@ -249,3 +249,41 @@ function Gen(time) {
 // 1577096529397 100
 // 1577096530397 3000
 ```
+
+#### 对象扩展操作符
+
+ES6 中添加了数组的扩展操作符，让我们在操作数组时更加简便，美中不足的是并不支持对象扩展操作符，但是在 ES9 开始，这一功能也得到了支持，例如：
+
+```javascript
+var obj1 = { foo: "bar", x: 42 };
+var obj2 = { foo: "baz", y: 13 };
+
+var clonedObj = { ...obj1 };
+// 克隆后的对象: { foo: "bar", x: 42 }
+
+clonedObj.x = 200;
+
+var mergedObj = { ...obj1, ...obj2 };
+// 合并后的对象: { foo: "baz", x: 42, y: 13 }
+```
+
+上面便是一个简便的『 浅拷贝 』。这里有一点小提示，就是 `Object.assign()` 函数会触发 `setters`，而展开语法则不会。所以不能替换也不能模拟 `Object.assign()`。如果存在相同的属性名，只有最后一个会生效。
+
+#### Promise.prototype.finally()
+
+`Promise.prototype.finally()` 方法返回一个 `Promise`，在 `promise` 执行结束时，无论结果是 `fulfilled` 或者是 `rejected`，在执行 `then()` 和 `catch()`后，都会执行 `finally` 指定的回调函数。
+
+```javascript
+fetch("https://www.google.com")
+  .then(response => {
+    console.log(response.status);
+  })
+  .catch(error => {
+    console.log(error);
+  })
+  .finally(() => {
+    document.querySelector("#spinner").style.display = "none";
+  });
+```
+
+无论操作是否成功，当您需要在操作完成后进行一些清理时，`finally()` 方法就派上用场了。这为指定执行完 `promise` 后，无论结果是 `fulfilled` 还是 `rejected` 都需要执行的代码提供了一种方式，避免同样的语句需要在 `then()` 和 `catch()`中各写一次的情况。
