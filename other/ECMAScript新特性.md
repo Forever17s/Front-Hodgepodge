@@ -1,6 +1,6 @@
 > 从 ECMAScript 2016（ES7）开始，版本发布变得更加频繁，每年发布一个新版本，好在每次版本的更新内容并不多，本文会细说这些新特性，尽可能和旧知识相关联，帮你迅速上手这些特性。
 
-### ES7 新特性
+### ES7(ES2016) 新特性
 
 #### Array.prototype.includes()方法
 
@@ -51,7 +51,7 @@ console.log(Math.pow(2, 10)); // 1024
 
 ---
 
-### ES8 新特性
+### ES8(ES2017) 新特性
 
 #### Async/Await
 
@@ -198,7 +198,7 @@ console.log(Object.getOwnPropertyDescriptor(target2, "foo"));
 
 ---
 
-### ES9 新特性
+### ES9(ES2018) 新特性
 
 #### for await of
 
@@ -287,3 +287,302 @@ fetch("https://www.google.com")
 ```
 
 无论操作是否成功，当您需要在操作完成后进行一些清理时，`finally()` 方法就派上用场了。这为指定执行完 `promise` 后，无论结果是 `fulfilled` 还是 `rejected` 都需要执行的代码提供了一种方式，避免同样的语句需要在 `then()` 和 `catch()`中各写一次的情况。
+
+#### 新的正则表达式特性
+
+ES9 为正则表达式添加了四个新特性，进一步提高了 JavaScript 的字符串处理能力。这些特点如下:
+
+- 反向(`lookbehind`)断言
+- `Unicode` 属性转义
+- `s (dotAll)` 标志
+- 命名捕获组
+
+##### 反向(lookbehind)断言
+
+断言(Assertion)是一个对当前匹配位置之前或之后的字符的测试， 它不会实际消耗任何字符，所以断言也被称为『 非消耗性匹配 』或『 非获取匹配 』。
+
+正则表达式的断言一共有 4 种形式：
+
+- `(?=pattern)` 零宽正向肯定断言(zero-width positive lookahead assertion)
+- `(?!pattern)` 零宽正向否定断言(zero-width negative lookahead assertion)
+- `(?<=pattern)` 零宽反向肯定断言(zero-width positive lookbehind assertion)
+- `(?<!pattern)` 零宽反向否定断言(zero-width negative lookbehind assertion)
+
+在 ES9 之前，JavaScript 正则表达式，只支持正向断言。正向断言的意思是：当前位置后面的字符串应该满足断言，但是并不捕获。例子如下：
+
+```javascript
+"fishHeadfishTail".match(/fish(?=Head)/g); // ["fish"]
+```
+
+反向断言和正向断言的行为一样，只是方向相反。例子如下：
+
+```javascript
+"abc123".match(/(?<=(\d+)(\d+))$/); //  ["", "1", "23", index: 6, input: "abc123", groups: undefined]
+```
+
+##### Unicode 属性转义
+
+正则表达式中的 [Unicode 转义符](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions/Unicode_Property_Escapes)允许根据 Unicode 字符属性匹配 Unicode 字符。它允许区分字符类型，例如大写和小写字母，数学符号和标点符号。部分例子代码如下：
+
+```javascript
+// 匹配所有数字
+const regex = /^\p{Number}+$/u;
+regex.test('²³¹¼½¾') // true
+regex.test('㉛㉜㉝') // true
+regex.test('ⅠⅡⅢⅣⅤⅥⅦⅧⅨⅩⅪⅫ') // true
+
+// 匹配所有空格
+\p{White_Space}
+
+// 匹配各种文字的所有字母，等同于 Unicode 版的 \w
+[\p{Alphabetic}\p{Mark}\p{Decimal_Number}\p{Connector_Punctuation}\p{Join_Control}]
+
+// 匹配各种文字的所有非字母的字符，等同于 Unicode 版的 \W
+[^\p{Alphabetic}\p{Mark}\p{Decimal_Number}\p{Connector_Punctuation}\p{Join_Control}]
+
+// 匹配 Emoji
+/\p{Emoji_Modifier_Base}\p{Emoji_Modifier}?|\p{Emoji_Presentation}|\p{Emoji}\uFE0F/gu
+
+// 匹配所有的箭头字符
+const regexArrows = /^\p{Block=Arrows}+$/u;
+regexArrows.test('←↑→↓↔↕↖↗↘↙⇏⇐⇑⇒⇓⇔⇕⇖⇗⇘⇙⇧⇩') // true
+```
+
+##### s/dotAll 标志
+
+```javascript
+let regex = /./;
+
+regex.test("\n"); // false
+regex.test("\r"); // false
+regex.test("\u{2028}"); // false
+regex.test("\u{2029}"); // false
+
+regex.test("\v"); // true
+regex.test("\f"); // true
+regex.test("\u{0085}"); // true
+
+/foo.bar/.test("foo\nbar"); // false
+/foo[^]bar/.test("foo\nbar"); // true
+/foo[\s]bar/.test("foo\nbar"); // true
+```
+
+但是在 ES9 之后，JS 正则增加了一个新的标志 **`s`** 用来表示 `dotAll`，这可以匹配任意字符。代码如下：
+
+```javascript
+/foo.bar/s.test("foo\nbar"); // true
+
+const re = /foo.bar/s; //  等价于 const re = new RegExp('foo.bar', 's');
+re.test("foo\nbar"); // true
+re.dotAll; // true
+re.flags; // "s"
+```
+
+##### 命名捕获组
+
+在以往的版本里，JS 的正则分组是无法命名的，所以容易混淆。例如下面获取年月日的例子，很容易让人搞不清哪个是月份，哪个是年份:
+
+```javascript
+const matched = /(\d{4})-(\d{2})-(\d{2})/.exec("2019-01-01");
+console.log(matched[0]); // 2019-01-01
+console.log(matched[1]); // 2019
+console.log(matched[2]); // 01
+console.log(matched[3]); // 01
+```
+
+ES9 引入了命名捕获组，允许为每一个组匹配指定一个名字，既便于阅读代码，又便于引用。代码如下：
+
+```javascript
+const RE_DATE = /(?<year>\d{4})-(?<month>\d{2})-(?<day>\d{2})/;
+
+const matchObj = RE_DATE.exec("1999-12-31");
+const year = matchObj.groups.year; // 1999
+const month = matchObj.groups.month; // 12
+const day = matchObj.groups.day; // 31
+
+const RE_OPT_A = /^(?<as>a+)?$/;
+const matchObj = RE_OPT_A.exec("");
+
+matchObj.groups.as; // undefined
+"as" in matchObj.groups; // true
+```
+
+---
+
+### ES10(ES2019) 新特性
+
+#### Array.prototype.flat() / flatMap()
+
+多维数组是一种常见的数据格式，特别是在进行数据检索的时候。将多维数组打平是个常见的需求。通常我们能够实现，但是不够优雅。
+
+flat() 方法会按照一个可指定的深度递归遍历数组，并将所有元素与遍历到的子数组中的元素合并为一个新数组返回。
+
+```javascript
+// arr.flat(depth) // depth是指定要提取嵌套数组的结构深度，默认值为 1。也可以填写Infinity，无论多少层都直接铺平
+const numbers1 = [1, 2, [3, 4, [5, 6]]];
+console.log(numbers1.flat()); // [1, 2, 3, 4, [5, 6]]
+const numbers2 = [1, 2, [3, 4, [5, 6]]];
+console.log(numbers2.flat(2)); // [1, 2, 3, 4, 5, 6]
+const numbers3 = [1, 2, [3, 4, [5, 6]]];
+console.log(numbers3.flat(Infinity)); // [1, 2, 3, 4, 5, 6]
+```
+
+> 有了 `flat` 方法，那自然而然就有 `Array.prototype.flatMap` 方法，`flatMap()` 方法首先使用映射函数映射每个元素，然后将结果压缩成一个新数组。从方法的名字上也可以看出来它包含两部分功能一个是 `map`，一个是 `flat`。实际上 `flatMap` 是综合了 `map` 和 `flat` 的操作，所以它也**只能打平一层**。
+
+```javascript
+const arr = [1, 2, 3];
+console.log(arr.map(item => [item * 2]).flat()); // [2, 4, 6]
+console.log(arr.flatMap(item => [item * 2])); // [2, 4, 6]
+```
+
+#### Object.fromEntries()
+
+`Object.fromEntries()` 方法把键值对列表转换为一个对象，它是 `Object.entries()`的反函数。
+
+```javascript
+// 用Object.fromEntries()配合Object.entries()来实现年龄大于16的筛选
+const ageObj = {
+  wang: 21,
+  sun: 12,
+  li: 23
+};
+
+const ageOver_16 = Object.fromEntries(Object.entries(ageObj).filter(([name, age]) => age > 16));
+
+console.log(ageOver_16); // {wang: 21, li: 23}
+```
+
+#### Symbol.prototype.description
+
+`description` 是一个只读属性，它会返回 `Symbol` 对象的可选描述的字符串。与 `Symbol.prototype.toString()` 不同的是它不会包含 `Symbol()`的字符串。
+
+```javascript
+Symbol("desc").toString(); // "Symbol(desc)"
+Symbol("desc").description; // "desc"
+Symbol("").description; // ""
+Symbol().description; // undefined
+
+// 具名 symbols
+Symbol.iterator.toString(); // "Symbol(Symbol.iterator)"
+Symbol.iterator.description; // "Symbol.iterator"
+
+//全局 symbols
+Symbol.for("foo").toString(); // "Symbol(foo)"
+Symbol.for("foo").description; // "foo"
+```
+
+#### String.prototype.matchAll
+
+`matchAll()` 方法返回一个包含所有匹配正则表达式的结果及分组捕获组的迭代器。并且返回一个不可重启的迭代器。
+
+```javascript
+var regexp = /t(e)(st(\d?))/g
+var str = 'test1test2'
+
+str.match(regexp) // ['test1', 'test2']
+str.matchAll(regexp) // RegExpStringIterator {}
+[...str.matchAll(regexp)] // [['test1', 'e', 'st1', '1', index: 0, input: 'test1test2', length: 4], ['test2', 'e', 'st2', '2', index: 5, input: 'test1test2', length: 4]]
+```
+
+#### Function.prototype.toString()
+
+ES2019 中，`Function.toString()`发生了变化。之前执行这个方法时，得到的字符串是去空白符号的。而现在，得到的字符串呈现出原本源码的样子：
+
+```javascript
+function sum(a, b) {
+  return a + b;
+}
+console.log(sum.toString());
+// function sum(a, b) {
+//  return a + b;
+// }
+```
+
+#### try-catch
+
+在以往的版本中，try-catch 里 catch 后面必须带异常参数，例如：
+
+```javascript
+// ES10之前
+try {
+  // tryCode
+} catch (err) {
+  // catchCode
+}
+```
+
+但是在 ES10 之后，这个参数却不是必须的，如果用不到，我们可以不用传，例如：
+
+```javascript
+try {
+  console.log("Foobar");
+} catch {
+  console.error("Bar");
+}
+```
+
+#### BigInt
+
+`BigInt` 是一种内置对象，它提供了一种方法来表示大于 `253 - 1` 的整数。这原本是 `Javascript` 中可以用 `Number` 表示的最大数字。`BigInt` 可以表示任意大的整数。
+
+可以用在一个整数字面量后面加 `n` 的方式定义一个 `BigInt` ，如：`10n`，或者调用函数`BigInt()`。
+
+在以往的版本中，我们有以下的弊端：
+
+```javascript
+// 大于2的53次方的整数，无法保持精度
+2 ** 53 === 2 ** 53 + 1;
+// 超过2的1024次方的数值，无法表示
+2 ** 1024; // Infinity
+```
+
+但是在 ES10 引入 `BigInt` 之后，这个问题便得到了解决。
+
+以下操作符可以和 `BigInt` 一起使用： `+`、`*`、`-`、`**`、`%` 。除 `>>>` （无符号右移）之外的位操作也可以支持。因为 `BigInt` 都是有符号的， `>>>` （无符号右移）不能用于 `BigInt`。`BigInt` 不支持单目 (`+`) 运算符。
+
+`/` 操作符对于整数的运算也没问题。可是因为这些变量是 `BigInt` 而不是 `BigDecimal` ，该操作符结果会向零取整，也就是说不会返回小数部分。
+
+`BigInt` 和 `Number`不是严格相等的，但是宽松相等的。
+
+所以在`BigInt`出来以后，JS 的原始类型便增加到了**7**个，如下：
+
+- Boolean
+- Null
+- Undefined
+- Number
+- String
+- Symbol (ES6)
+- BigInt (ES10)
+
+#### globalThis
+
+`globalThis` 属性包含类似于全局对象 `this` 值。所以在全局环境下，我们有：
+
+```javascript
+globalThis === this; // true
+```
+
+#### import()
+
+静态的 `import` 语句用于导入由另一个模块导出的绑定。无论是否声明了 严格模式，导入的模块都运行在严格模式下。在浏览器中，`import` 语句只能在声明了 `type="module"` 的 `script` 的标签中使用。
+
+但是在 ES10 之后，我们有动态 `import()`，它不需要依赖 `type="module"` 的 `script` 标签。
+
+```javascript
+const main = document.querySelector("main");
+for (const link of document.querySelectorAll("nav > a")) {
+  link.addEventListener("click", e => {
+    e.preventDefault();
+
+    import("/modules/my-module.js")
+      .then(module => {
+        module.loadPageInto(main);
+      })
+      .catch(err => {
+        main.textContent = err.message;
+      });
+  });
+}
+```
+
+> 一个 ECMAScript 标准的制作过程，包含了 Stage 0 到 Stage 4 五个阶段。还有一些 ES10 的新特性（例如：类的私有变量、可选链操作符）处于 Stage 3 或者 Stage 4 阶段，都是实用性很强的应用，期待美好事情的发生 :santa:
