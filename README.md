@@ -164,6 +164,8 @@
 
 #### [如何去做 Code Review - Google](https://github.com/google/eng-practices/blob/master/review/reviewer/index.md)
 
+#### [关于 React 高阶组件](./other/关于React高阶组件.md)
+
 #### [如何争取一次好的述职](./other/述职总结.md)
 
 #### [VS Code 插件及配置](./other/VSCode配置.md)
