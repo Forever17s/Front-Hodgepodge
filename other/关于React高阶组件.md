@@ -106,3 +106,50 @@ connect(props => ({
   userStatsFetch: { url: `/users/stats`, force: true }
 }))(UsersList);
 ```
+
+#### HOC 在 Form 上的具体实践
+
+> Form 中会包含各种不同的组件，常见的有 `Input`、`Selector`、`Checkbox` 等等，也会有根据业务需求加入的自定义组件。Form 灵活多变，从功能上看，表单校验可能为单组件值校验，也可能为全表单值校验，可能为常规检验，比如：非空、输入限制，也可能需要与服务端配合，甚至需要根据业务特点进行定制。从 UI 上看，检验结果显示的位置，可能在组件下方，也可能是在组件右侧。
+
+直接裸写 Form，无疑是机械而又重复的。将 Form 中组件的 `value` 经过 `validator`，把 `value`，`validator` 产生的 `error` 信息储存到 `state` 或 `redux store` 中，然后在 `view` 层完成显示。这条路大家都是相同的，可以进行复用，只是我们面对的事不同的组件，不同的 `validator`，不同的 `view` 而已。对于 Form 而言，既要满足通用，又要满足个性化的需求，以往单纯的配置化只会让使用愈加繁琐，我们所需要抽取的是 Form 功能而非 UI，因此通过 **HOC** 针对 Form 的功能进行提取就成为了必然。
+
+<div align=center>
+
+![](./../resource/other_ReactHOC_Form.png)
+
+</div>
+
+至于 **HOC** 在 Form 上的具体表现，首先将表单中的组件 （Input、Selector ...）与相对应 `validator` 与组件值回调函数名（`tigger`）传入 `Decorator`，将 `validator` 与 `tigger` 相绑定。`Decorator` 完成了各种不同组件与 Form 内置 Store 间 `value` 的传递、校验功能的抽象，即上文中提到 `Props Proxy` 方式的其中两种作用： `提取 state` 与 `操作 props`。
+
+```javascript
+function formFactoryFactory({
+  validator,
+  trigger = 'onChange',
+  // ...
+}) {
+  return FormFactory(WrappedComponent) {
+    return class Decorator extends React.Component {
+      getBind(trigger, validator) {
+        // ...
+      }
+      render() {
+        const newProps = {
+          ...this.props,
+          [trigger]: this.getBind(trigger, validator),
+          // ...
+        }
+        return <WrappedComponent {...newProps} />
+      }
+    }
+  }
+}
+
+// 调用
+formFactoryFactory({
+  validator: (value) => {
+    return value !== '';
+  }
+})(<Input placeholder="请输入..." />)
+```
+
+React 始终强调组合优于继承，期望通过复用小组件来构建大组件来使开发变得简单而又高效，与传统面向对象思想是截然不同的，建议大家认真读一遍 [官方文档](#https://react.docschina.org/docs/higher-order-components.html)。
