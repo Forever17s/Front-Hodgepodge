@@ -156,6 +156,18 @@
 - CSS、SCSS 书写规范
 - JavaScript 书写规范
 
+#### [前端物语 - 组件设计](./chatAbout/前端物语-组件设计.md)
+
+- 层次结构和 UML 类图
+- 扁平化、面向数据的 state/props
+- 更加纯粹的 State 变化
+- 低耦合
+- 辅助代码分离
+- 提炼精华
+- 及时模块化
+- 集中/统一的状态管理
+- 附：API 的设计原则
+
 ### 其它
 
 #### [ECMAScript 最新特性大盘点](./other/ECMAScript新特性.md)
