@@ -65,7 +65,12 @@
   "commentTranslate.targetLanguage": "zh-CN",
   // Python错误检测和格式化
   "python.linting.flake8Enabled": true,
-  "python.formatting.provider": "yapf"
+  "python.formatting.provider": "yapf",
+  // 一行运行最长字符和忽略的错误检查序号
+  "python.linting.flake8Args": [
+    "--max-line-length=120",
+    "--ignore=E501, E262, F401",
+  ]
 }
 
 ```
