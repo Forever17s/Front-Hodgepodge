@@ -196,7 +196,9 @@ git 仓库的三个组成部分为：『 工作区 』 Working Directory、『 �
 
 </div>
 
-相比 merge 来说 git rebase 能有效避免这种情况的发生,从而减少分支合并的记录。下面是执行 `git rebase master` 后
+相比 merge 来说 git rebase 能有效避免这种情况的发生,从而减少分支合并的记录。下面是在 feature1 分支执行 `git rebase master` 后 （如果出现冲突我们需要先解决冲突）
+
+> 这句命令的意思是：以 master 为基础，将 feature1 分支上的修改增加到 master 分支上，并生成新的版本。
 
 <div align=center>
 
@@ -204,14 +206,21 @@ git 仓库的三个组成部分为：『 工作区 』 Working Directory、『 �
 
 </div>
 
-这里补充一点：rebase 做了什么操作呢？
-
-> 首先，git 会把 feature1 分支里面的每个 commit 取消掉；  
+> 这里补充一点：rebase 做了什么操作呢？
+> 首先，git 会把 feature11 分支里面的每个 commit 取消掉；  
 > 其次，把上面的操作临时保存成 patch 文件，存在 .git/rebase 目录下；  
-> 然后，把 feature1 分支更新到最新的 master 分支；  
-> 最后，把上面保存的 patch 文件应用到 feature1 分支上；
+> 然后，把 feature11 分支更新到最新的 master 分支；  
+> 最后，把上面保存的 patch 文件应用到 feature11 分支上；
 
-也因为这些操作，git rebase 是一个危险命令，因为它改变了历史。除非你可以肯定需要 rebase 分支只有你自己使用，否则我们应该谨慎使用
+> 也因为这些操作，git rebase 是一个**危险命令**，因为它改变了历史。除非你可以肯定需要 rebase 分支只有你自己使用，否则我们应该谨慎使用
+
+刚才的操作仅仅是把 master 的提交合并到了 feature1 上，现在切换到主分支 master，将 feather1 分支上的提交合并过来。
+
+```bash
+git checkout master
+
+git merge feature1
+```
 
 ### Git 修改 commit message
 
