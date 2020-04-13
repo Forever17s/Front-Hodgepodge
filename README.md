@@ -138,6 +138,7 @@
 - 当前防御 CSRF 的几种策略
 - XSS 跨站脚本攻击
 - MVVM 和 MVC 的区别
+- 关于 npm 和 yarn
 
 #### [前端物语 - Git](./chatAbout/前端物语-Git.md)
 
