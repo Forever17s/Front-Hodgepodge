@@ -25,6 +25,9 @@
   "editor.wordWrap": "off",
   // 保存时格式化
   "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true
+  },
   // 添加 vue 支持
   "files.associations": {
     ".eslintrc": "json",
@@ -37,7 +40,7 @@
   // prettier 设置强制单引号
   "prettier.singleQuote": false,
   // prettier 单行最长折行限制
-  "prettier.printWidth": 120,
+  "prettier.printWidth": 80,
   "[html]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
@@ -46,8 +49,8 @@
   // vetur 的自定义设置
   "vetur.format.defaultFormatterOptions": {
     "js-beautify-html": {
-      "wrap_attributes": "aligned-multiple",
-    },
+      "wrap_attributes": "aligned-multiple"
+    }
   },
   // git 管理
   "git.confirmSync": false,
@@ -69,8 +72,10 @@
   // 一行运行最长字符和忽略的错误检查序号
   "python.linting.flake8Args": [
     "--max-line-length=120",
-    "--ignore=E501, E262, F401",
-  ]
+    "--ignore=E501, E262, F401"
+  ],
+  // 两个选择器中是否换行
+  "diffEditor.ignoreTrimWhitespace": false
 }
 
 ```
