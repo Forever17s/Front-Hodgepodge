@@ -252,3 +252,69 @@ git merge feature1
 2. 通过 git reset –-soft <版本号>重置至指定版本的提交
 
 3. 通过 git push origin master --force 强制提交当前版本号
+
+### Git 提交信息规范
+
+> 在使用 Git 进行代码的分布式版本控制时，规范化 commit message 可以帮助程序猿在多人开发协作中更好的理解他人对代码的改动信息，避免大家按照各自的理解和习惯（甚至是随意）书写，而对他人和自己造成困惑，从而增加代码审查和纠错的时间成本。
+
+基于 [Angular 规范](https://github.com/angular/angular.js/blob/f3377da6a748007c11fde090890ee58fae4cefa5/CONTRIBUTING.md#commit)，推荐使用下面几个 commit 的（前缀）标识
+
+- feat: 新功能
+- fix: bug 修复
+- docs: 文档变更
+- style: 样式变更
+- refactor: 重构（非新功能也不是 bug 修复的变动）
+- perf: 性能优化改进
+- test: 新增或修订单元测试
+- chore: 构建过程或辅助工具变更
+
+### Git 代码提交检测
+
+#### 安装 husky 和 commitlint
+
+```bash
+npm install --save-dev husky lint-staged eslint prettier @commitlint/cli @commitlint/config-conventional
+```
+
+#### 配置 commitlint
+
+```javascript
+// commitlint.config.js 项目根目录下增加该文件
+const customTypes = ["font", "package", "delete"];
+const defaultTypes = [
+  "feat",
+  "fix",
+  "docs",
+  "style",
+  "refactor",
+  "test",
+  "chore",
+  "revert",
+];
+module.exports = {
+  extends: ["@commitlint/config-conventional"],
+  rules: {
+    "subject-min-length": [2, "always", 5],
+    "type-enum": [2, "always", [...defaultTypes, ...customTypes]],
+  },
+};
+```
+
+#### 配置 husky
+
+```javascript
+// 在 package.json 中配置 husky
+"husky": {
+   "hooks": {
+   "pre-commit": "lint-staged",
+   "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
+   }
+},
+"lint-staged": {
+   "src/**": [
+   "prettier --write",
+   "eslint --fix",
+   "git add"
+   ]
+}
+```
