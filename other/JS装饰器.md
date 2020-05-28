@@ -158,3 +158,143 @@ console.log(person.eat()); // i can eat.
 console.log(person.think()); // i can think.
 console.log(person.run()); // i can run.
 ```
+
+#### 常用场景
+
+##### 1.防抖节流
+
+以往我们在频繁触发的场景下，为了优化性能，经常会使用到节流函数。下面以 React 组件绑定滚动事件为例子：
+
+```javascript
+import throttle from "lodash/throttle";
+
+class App extends React.Component {
+  constructor(props) {
+    super(props);
+    this.handleScroll = throttle(this.scroll, 500);
+  }
+
+  componentDidMount() {
+    window.addEveneListener("scroll", this.handleScroll);
+  }
+  componentWillUnmount() {
+    window.removeEveneListener("scroll", this.handleScroll);
+  }
+  scroll() {}
+}
+```
+
+在组件中绑定事件需要注意应当在组件销毁的时候进行解绑。而由于节流函数返回了一个新的匿名函数，所以为了之后能够有效解绑，不得不将这个匿名函数存起来，以便于之后使用。但是在有了装饰器之后，我们就不必在每个绑定事件的地方都手动设置 `throttle` 方法，只需要在 `scroll` 函数添加一个 `throttle` 的装饰器就行了。
+
+```javascript
+// untils/decorators.js
+export const Deounce = (wait = 500) => {
+  let timer;
+  return (target, name, description) => {
+    const fn = description.value;
+    if (typeof fn === "function") {
+      description.value = function (...args) {
+        if (timer) clearTimeout(timer);
+        timer = setTimeout(() => {
+          fn.apply(this, args);
+        }, wait);
+      };
+    }
+  };
+};
+
+export const Throttle = (wait = 500) => {
+  let prev = new Date();
+  return (target, name, description) => {
+    const fn = description.value;
+    if (typeof fn === "function") {
+      description.value = function (...args) {
+        const now = new Date();
+        if (now - prev > wait) {
+          fn.apply(this, args);
+          prev = now;
+        }
+      };
+    }
+  };
+};
+```
+
+```javascript
+// 引入定义好的防抖、节流
+import { Deounce, Throttle } from "untils/decorators.js";
+
+class App extends React.Component {
+  constructor(props) {
+    super(props);
+  }
+
+  componentDidMount() {
+    window.addEventListener("resize", this.resize);
+    window.addEveneListener("scroll", this.scroll);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener("resize", this.resize);
+    window.removeEventListener("scroll", this.scroll);
+  }
+
+  @Deounce(400)
+  resize() {}
+
+  @Throttle(400)
+  scroll() {}
+}
+```
+
+##### 2.表单校验
+
+通过类属性装饰器来对类的属性进行类型的校验。
+
+```javascript
+const validate = (type) => (target, name, description) => {
+  if (typeof target[name] !== type) {
+    throw new Error(`attribute ${name} must be ${type} type`);
+  }
+};
+
+class Form {
+  @validate("string")
+  name = 233; // Error: attribute name must be ${type} type
+}
+```
+
+还可以升级一下，通过编写校验规则，来对整个类进行校验。
+
+```javascript
+const validator = (rules) => (targetClass) => {
+  return new Proxy(targetClass, {
+    construct(target, args) {
+      const obj = new target(...args);
+      for (let [name, type] of Object.entries(rules)) {
+        if (typeof obj[name] !== type) {
+          throw new Error(`attribute ${name} must be ${type} type`);
+        }
+      }
+      return obj;
+    }
+  });
+};
+
+const rules = {
+  name: "string",
+  password: "string",
+  age: "number",
+  sex: "boolean"
+};
+
+@validator(rules)
+class Person {
+  name = "John";
+  password = "123";
+  age = "12";
+  sex = "male";
+}
+
+const person = new Person();
+```
