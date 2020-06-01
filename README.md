@@ -188,3 +188,5 @@
 #### [浅谈 SPA、SEO、SSR](https://juejin.im/entry/5bbbf852f265da0aea699497)
 
 #### [JS 装饰器](./other/JS装饰器.md)
+
+#### [ES6 Proxy](./other/ES6的Proxy.md)
