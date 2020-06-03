@@ -90,7 +90,7 @@ methods.forEach((method) => {
 
 ##### 2.不能监听所有属性
 
-`Object.definePreperty`监听的是对象的属性，当一个对象为深层嵌套时，只能通过递归遍历添加监听。
+`Object.definePreperty`监听的是对象的属性，当一个对象为深层嵌套时，只能通过递归遍历添加监听。而且 `Proxy` 可以监听到新增加的属性，而 `Object.defineProperty` 不可以，需要你手动再去做一次监听。因此，在 `Vue` 中想动态监听属性，一般用 `Vue.set(person, "sex", "women")` 这种形式来添加。
 
 #### `Proxy` vs `Object.defineProperty`
 
@@ -104,33 +104,147 @@ let person = {
   age: 22
 };
 // Proxy 监听整个对象
-person = new Proxy(person, {
+const person_proxyA = new Proxy(person, {
   get(target, key) {
-    console.log("数据被读取");
+    console.log("Proxy 数据被读取");
     return Reflect.get(target, key);
   },
   set(target, key, val) {
-    console.log("数据被更新");
+    console.log("Proxy 数据被更新");
     return Reflect.set(target, key, val);
   }
 });
 
+const person_proxyB = {};
 Object.keys(person).forEach((key) => {
-  Object.definePorperty(person, key, {
+  Object.defineProperty(person_proxyB, key, {
     get: function () {
-      console.log("数据被读取");
+      console.log("Object.defineProperty 数据被读取");
       return person[key];
     },
     set: function (newValue) {
-      console.log("数据被更新");
+      console.log("Object.defineProperty 数据被更新");
       person[key] = newValue;
     }
   });
 });
-// Proxy 生效，Object.defineProperty 不生效
-person.sex = "man";
+// Proxy set触发，Object.defineProperty set没有触发
+person_proxyA.sex = "male";
+person_proxyB.sex = "female";
 ```
 
 ###### `Proxy` 可以直接监听数组的变化，无需进行数组方法重写。
 
+```javascript
+const arr = [1, 2, 3];
+const arr_proxyA = new Proxy(arr, {
+  get(target, key) {
+    console.log("Proxy 数据被读取");
+    return Reflect.get(target, key);
+  },
+  set(target, key, val) {
+    console.log("Proxy 数据被更新");
+    return Reflect.set(target, key, val);
+  }
+});
+
+const arr_proxyB = [];
+arr.forEach((item, index) => {
+  Object.defineProperty(arr_proxyB, index, {
+    get: function () {
+      console.log("Object.defineProperty 数据被读取");
+      return arr[index];
+    },
+    set: function (newValue) {
+      console.log("Object.defineProperty 数据被更新");
+      arr[index] = newValue;
+    }
+  });
+});
+
+arr_proxyA[0] = 10; // Proxy 生效
+arr_proxyB[0] = 10; // Object.defineProperty 生效
+arr_proxyA[3] = 20; // Proxy 生效
+arr_proxyB[3] = 20; // Object.defineProperty 不生效
+arr_proxyA.push(30); // Proxy 生效
+arr_proxyB.push(30); // Object.defineProperty 不生效
+```
+
 ###### `Proxy` 提供了 **13** 种拦截方式。
+
+##### 不足
+
+`Proxy` 的兼容性不是太好，不兼容 `IE`，且无法通过 `polyfill` 提供兼容。
+
+#### Proxy 的拦截方法
+
+##### get 方法拦截对目标对象属性的读取
+
+`get` 方法接收三个参数：目标对象、属性名和 `Proxy` 实例本身。基于 `get` 方法的特性，可以实现很多实用的功能，比如设置私有属性（一般定义私有属性我们使用 `_` 开头），实现禁止访问私有属性的功能。
+
+```javascript
+const person = {
+  name: "test",
+  age: 22,
+  _sex: "male"
+};
+
+const person_proxy = new Proxy(person, {
+  get(target, prop) {
+    if (prop[0] === "_") {
+      throw new Error(`${prop} is private attribute.`);
+    }
+    return target[prop];
+  }
+});
+person_proxy.name; // test
+person_proxy._sex; // Uncaught Error: _sex is private attribute.
+```
+
+##### set 方法拦截对属性的赋值操作
+
+`set` 方法接收四个参数：目标对象、属性名、新属性值和 `Proxy` 实例本身。使用 `Proxy` 可以在填写表单的时候，拦截其中的字段进行格式校验。
+
+```javascript
+// 验证方法
+function validator(obj, validators) {
+  return new Proxy(obj, {
+    set(target, key, value) {
+      const validator = validators[key];
+      if (!validator) {
+        target[key] = value;
+      } else if (validator.validate(value)) {
+        target[key] = value;
+      } else {
+        console.error(validator.message || "");
+      }
+    }
+  });
+}
+
+// 定义验证规则
+const validators = {
+  name: {
+    validate(value) {
+      return value.length > 6;
+    },
+    message: "用户名长度不能小于六"
+  },
+  password: {
+    validate(value) {
+      return value.length > 10;
+    },
+    message: "密码长度不能小于十"
+  },
+  moblie: {
+    validate(value) {
+      return /^1(3|5|7|8|9)[0-9]{9}$/.test(value);
+    },
+    message: "手机号格式错误"
+  }
+};
+
+const form_proxy = validator({}, validators);
+form_proxy.name = "test"; // 用户名长度不能小于六
+form_proxy.password = "113123123123123";
+```
