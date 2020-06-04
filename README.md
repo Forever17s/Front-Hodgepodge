@@ -173,10 +173,6 @@
 
 #### [ECMAScript 最新特性大盘点](./other/ECMAScript新特性.md)
 
-#### [设计原则 - Ant Design](https://ant.design/docs/spec/proximity-cn)
-
-#### [如何去做 Code Review - Google](https://github.com/google/eng-practices/blob/master/review/reviewer/index.md)
-
 #### [关于 React 高阶组件](./other/关于React高阶组件.md)
 
 #### [如何争取一次好的述职](./other/述职总结.md)
@@ -190,3 +186,11 @@
 #### [JS 装饰器](./other/JS装饰器.md)
 
 #### [ES6 Proxy](./other/ES6的Proxy.md)
+
+### 分享
+
+#### [设计原则 - Ant Design](https://ant.design/docs/spec/proximity-cn)
+
+#### [如何去做 Code Review - Google](https://github.com/google/eng-practices/blob/master/review/reviewer/index.md)
+
+#### [Vue 3 设计过程 - Evan You](https://zhuanlan.zhihu.com/p/144290894)
