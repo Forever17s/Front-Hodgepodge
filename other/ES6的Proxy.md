@@ -248,3 +248,56 @@ const form_proxy = validator({}, validators);
 form_proxy.name = "test"; // 用户名长度不能小于六
 form_proxy.password = "113123123123123";
 ```
+
+##### apply 方法拦截函数的调用
+
+`apply` 方法接收三个参数，分别是`目标对象`、`上下文对象`（this）、`参数数组`。通过 `apply` 方法可以获取到函数的执行次数，也可以打印出函数执行消耗的时间，常常可以用来做性能分析。
+
+```javascript
+function log() {}
+
+const log_proxy = new Proxy(log, {
+  _count: 0,
+  apply(target, context, args) {
+    target.apply(context, args);
+    console.log(`this function has been called ${++this._count} times.`);
+  }
+});
+log_proxy();
+```
+
+##### construct 方法拦截 new 操作符
+
+`apply` 方法接收三个参数，分别是`目标对象`、`构造函数的参数列表`、`Proxy 对象`，最后需要返回一个对象。
+
+```javascript
+function Person(name, age) {
+  this.name = name;
+  this, (age = age);
+}
+const person_proxy = new Proxy(Person, {
+  construct(target, args, newTarget) {
+    console.log(`new Person: ${args}.`);
+    return new target(...args);
+  }
+});
+
+const personTest = new person_proxy("Tom", 23); // new Person: Tom,23.
+```
+
+如果构造函数没有返回任何值或者返回了原始类型的值，那么默认返回的就是 `this`，如果返回的是一个引用类型的值，那么最终 `new` 出来的就是这个值。因此，我们可以代理一个空函数，然后返回一个新的对象。
+
+```javascript
+function noop() {}
+
+const Person = new Proxy(noop, {
+  construct(target, args, newTarget) {
+    return {
+      name: args[0],
+      age: args[1]
+    };
+  }
+});
+
+const person_proxy = new Person("Tom", 21); // {name: "Tom", age: 21}
+```
