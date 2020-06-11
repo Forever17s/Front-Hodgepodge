@@ -188,6 +188,8 @@
 
 #### [ES6 Proxy](./other/ES6的Proxy.md)
 
+#### [Deno Vs Node](./other/Deno和Node.md)
+
 ### 分享
 
 #### [设计原则 - Ant Design](https://ant.design/docs/spec/proximity-cn)
