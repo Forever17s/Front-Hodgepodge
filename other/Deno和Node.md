@@ -113,5 +113,7 @@ console.log(data);
 ###### 相关资料
 
 [20 分钟入门 deno](https://juejin.im/post/5ebcabb2e51d454da74185a9#heading-11)
+
 [JavaScript 开发人员更喜欢 Deno 的五大原因](https://mp.weixin.qq.com/s/7pqDSRRCz0K17gPW7hVt8w)
+
 [Deno 正式发布，彻底弄明白和 node 的区别](https://www.v2ex.com/t/671814)
