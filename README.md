@@ -197,3 +197,5 @@
 #### [如何去做 Code Review - Google](https://github.com/google/eng-practices/blob/master/review/reviewer/index.md)
 
 #### [Vue 3 设计过程 - Evan You](https://zhuanlan.zhihu.com/p/144290894)
+
+#### [了不起的 TypeScript 入门教程](https://juejin.im/post/5edd8ad8f265da76fc45362c)
