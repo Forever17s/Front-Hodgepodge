@@ -7,7 +7,8 @@
 - 配置本地服务器: `Live Server`
 - lodash 提示: `Lodash`
 - markdown 编译展示，功能比 vscode 自带编译强大: `Markdown Preview Enhanced`
-- 代码格式化工具: `Prettier`、`Vetur`
+- 代码格式化工具: `Prettier`
+- Vue 项目支持: Vetur
 - 代码补全工具: `TabNine`
 - 注释辅助，/\*\*直接按回车使用: `Document this`
 - 注释翻译: `Comment Translate`
@@ -41,17 +42,9 @@
   "prettier.singleQuote": false,
   // prettier 单行最长折行限制
   "prettier.printWidth": 80,
-  "[html]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  },
-  // 选择 vue 文件中 template 的格式化工具
-  "vetur.format.defaultFormatter.html": "js-beautify-html",
-  // vetur 的自定义设置
-  "vetur.format.defaultFormatterOptions": {
-    "js-beautify-html": {
-      "wrap_attributes": "aligned-multiple"
-    }
-  },
+  // 在对象或数组最后一个元素后面是不加逗号
+  "prettier.trailingComma": "none",
+
   // git 管理
   "git.confirmSync": false,
   "git.autofetch": true,
@@ -75,7 +68,9 @@
     "--ignore=E501, E262, F401"
   ],
   // 两个选择器中是否换行
-  "diffEditor.ignoreTrimWhitespace": false
+  "diffEditor.ignoreTrimWhitespace": false,
+  // terminal默认使用zsh
+  "terminal.integrated.shell.osx": "/bin/zsh"
 }
 
 ```
