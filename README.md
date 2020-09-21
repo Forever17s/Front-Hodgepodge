@@ -184,8 +184,6 @@
 
 #### [Webpack 入门](./other/Webpack入门.md)
 
-#### [浅谈 SPA、SEO、SSR](https://juejin.im/entry/5bbbf852f265da0aea699497)
-
 #### [JS 装饰器](./other/JS装饰器.md)
 
 #### [ES6 Proxy](./other/ES6的Proxy.md)
@@ -205,3 +203,7 @@
 #### [了不起的 TypeScript 入门教程](https://juejin.im/post/5edd8ad8f265da76fc45362c)
 
 #### [JS 正则表达式完整教程](https://juejin.im/post/5965943ff265da6c30653879)
+
+#### [浅谈 SPA、SEO、SSR](https://juejin.im/entry/5bbbf852f265da0aea699497)
+
+#### [JavaScript 事件循环：从起源到浏览器再到 Node.js](https://mp.weixin.qq.com/s/OudqDff3QvmBqIiD74LrTw)
