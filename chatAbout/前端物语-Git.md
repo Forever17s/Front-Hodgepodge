@@ -34,7 +34,7 @@
 > - Workspace：工作区
 > - Index / Stage：暂存区
 > - Repository：仓库区（或本地仓库）
-> - Remote：远程仓库
+> - Remote：远程仓库（默认 origin）
 
 ##### 命令简介
 
@@ -54,6 +54,9 @@ $ git commit -m [message]
 # 拉取远程仓库的变化
 $ git pull
 
+# 清理无效的远程追踪分支
+$ git pull -p
+
 # 上传本地commit到当前分支
 $ git push
 
@@ -62,6 +65,9 @@ $ git push [remote] --force
 
 # 下载远程仓库的所有变动
 $ git fetch [remote]
+
+# 等同于 git pull -p
+$ git fetch --prune [remote]
 
 # 列出所有本地分支
 $ git branch
@@ -76,7 +82,7 @@ $ git checkout [branch-name]
 $ git branch -d [branch-name]
 
 # 删除远程分支，往往需要操作权限
-$ git push origin --delete [branch-name]
+$ git push [remote] --delete [branch-name]
 
 # 合并指定分支到当前分支
 $ git merge [branch]
@@ -84,8 +90,13 @@ $ git merge [branch]
 # 选择一个commit，合并进当前分支
 $ git cherry-pick [commit]
 
+# 选择多个commit，合并进当前分支
+$ git cherry-pick [commit start id]..[commit end id] # 区间左开右闭，即不包含commit start id的更新内容
+$ git cherry-pick [commit start id]^..[commit end id] # 区间左闭右闭，即包含commit start id的更新内容
+
 # 暂时将未提交的变化移入缓存。拉代码时候解决冲突很好用
-$ git stash
+$ git stash # 快速缓存，信息为上次的git message
+$ git stash save [message] # 自定义缓存信息
 
 # 将最近一次缓存的代码恢复
 $ git stash pop
@@ -99,7 +110,6 @@ $ git log
 # 显示指定文件是什么人在什么时间修改过
 $ git blame [file]
 
-
 # 新建一个tag在当前commit
 $ git tag [tag]
 
@@ -107,7 +117,7 @@ $ git tag [tag]
 $ git tag -d [tag]
 
 # 删除远程tag，往往需要操作权限
-$ git push origin :refs/tags/[tagName]
+$ git push [remote] :refs/tags/[tagName]
 ```
 
 ### git reset、git revert 和 git checkout 的区别
@@ -289,14 +299,14 @@ const defaultTypes = [
   "refactor",
   "test",
   "chore",
-  "revert",
+  "revert"
 ];
 module.exports = {
   extends: ["@commitlint/config-conventional"],
   rules: {
     "subject-min-length": [2, "always", 5],
-    "type-enum": [2, "always", [...defaultTypes, ...customTypes]],
-  },
+    "type-enum": [2, "always", [...defaultTypes, ...customTypes]]
+  }
 };
 ```
 
