@@ -60,6 +60,7 @@
 - addEventListener 监听函数
 - 循环中创建闭包：一个常见的错误
 - 时间戳 getTime()
+- 浮点数的误差
 - 截取字符串 slice/splice/substr/substring(n,m)
 - localStorage，sessionStorage 和 cookies 的区别
 - JS 设置 cookie
