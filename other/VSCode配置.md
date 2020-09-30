@@ -15,6 +15,7 @@
 - 备忘: `TODO Highlight`
 - 为 Vs Code 快捷生成 ES6 的语法（ js 和 ts 同时都支持）: `javascript (ES6) code snippets`
 - python 编码必备，自带检测和格式化工具: `python`
+- drawio 流程图绘制工具，命名 ` .drawio` 后缀使用
 
 **`setting.json`文件配置：**
 
