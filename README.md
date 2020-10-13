@@ -95,6 +95,7 @@
 - JSX 的注意点
 - React 组件生命周期
 - React 中 render 的触发方式
+- React 处理事件的四种方式
 - Virtual DOM 算法简述
 - Angular 和 Vue 的动态刷新方式
 - React、Vue 和 Angular 的性能比较
