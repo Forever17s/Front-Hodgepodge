@@ -64,6 +64,7 @@
 - 截取字符串 slice/splice/substr/substring(n,m)
 - localStorage，sessionStorage 和 cookies 的区别
 - JS 设置 cookie
+- 关于 sort 排序
 - 简述面向对象
 - Number/JSON
 - attachEvent 和 addEventListener
