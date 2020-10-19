@@ -278,6 +278,27 @@ git merge feature1
 - test: 新增或修订单元测试
 - chore: 构建过程或辅助工具变更
 
+##### 提交信息表情指南
+
+| emoji                   | code                          | 描述               | 适合搭配   |
+| ----------------------- | ----------------------------- | ------------------ | ---------- |
+| :new:                   | `:new:`                       | 新增功能、特性     | `feat`     |
+| :bug:                   | `:bug:`                       | Bug 修复           | `fix`      |
+| :lock:                  | `:lock:`                      | 修复安全问题       | `fix`      |
+| :memo: :book:           | `:memo:` / `:book:`           | 文档或网站改进     | `docs`     |
+| :lipstick:              | `:lipstick:`                  | 增加或更新样式     | `style`    |
+| :wastebasket:           | `:wastebasket:`               | 废弃或移除         | `refactor` |
+| :fire:                  | `:fire:`                      | 移除代码或文件     | `refactor` |
+| :globe_with_meridians:  | `:globe_with_meridians:`      | 国际化改动         | `refactor` |
+| :hammer:                | `:hammer:`                    | 重大重构           | `refactor` |
+| :recycle:               | `:recycle:`                   | 代码优化           | `refactor` |
+| :zap: :racehorse:       | `:zap:` / `:racehorse:`       | 性能提升           | `perf`     |
+| :white_check_mark:      | `:white_check_mark:`          | 新增或更新测试用例 | `test`     |
+| :wrench:                | `:wrench:`                    | 修改配置文件       | `chore`    |
+| :arrow_up: :arrow_down: | `:arrow_up:` / `:arrow_down:` | 对依赖升、降级     | `chore`    |
+
+可结合 commit 前缀标识一起使用，更多表情请见 [gitmoji](#https://gitmoji.carloscuesta.me)
+
 ### Git 代码提交检测
 
 #### 安装 husky 和 commitlint
