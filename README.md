@@ -139,6 +139,7 @@
 - 常见 HTTP 的 Header
 - 关于 HTTPS 的安全性
 - 第一方 cookie 和第三方 cookie
+- 常见异常类型
 - CSRF 攻击实例
 - 当前防御 CSRF 的几种策略
 - XSS 跨站脚本攻击
