@@ -155,6 +155,9 @@
 - 关于 git rebase
 - Git 修改 commit message
 - Git 撤销已经推送至远端仓库的提交信息
+- .gitignore 文件不生效的解决办法
+- Git 提交信息规范
+- Git 配置代码提交检测
 
 #### [前端物语 - 开发规范](./chatAbout/前端物语-开发规范.md)
 

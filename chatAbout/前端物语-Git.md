@@ -263,6 +263,18 @@ git merge feature1
 
 3. 通过 git push origin master --force 强制提交当前版本号
 
+### .gitignore 文件不生效的解决办法
+
+> 规则：`.gitignore` 只能忽略那些原来没有被 `track` 的文件，如果某些文件已经被纳入了版本管理中，则修改`.gitignore` 是无效的。
+
+###### 解决办法
+
+```bash
+git rm -r --cached .
+git add .
+git commit -m "chore: update .gitignore"
+```
+
 ### Git 提交信息规范
 
 > 在使用 Git 进行代码的分布式版本控制时，规范化 commit message 可以帮助程序猿在多人开发协作中更好的理解他人对代码的改动信息，避免大家按照各自的理解和习惯（甚至是随意）书写，而对他人和自己造成困惑，从而增加代码审查和纠错的时间成本。
@@ -299,7 +311,7 @@ git merge feature1
 
 可结合 commit 前缀标识一起使用，更多表情请见 [gitmoji](#https://gitmoji.carloscuesta.me)
 
-### Git 代码提交检测
+### Git 配置代码提交检测
 
 #### 安装 husky 和 commitlint
 
