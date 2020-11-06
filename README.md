@@ -214,3 +214,5 @@
 #### [浅谈 SPA、SEO、SSR](https://juejin.im/entry/5bbbf852f265da0aea699497)
 
 #### [JavaScript 事件循环：从起源到浏览器再到 Node.js](https://mp.weixin.qq.com/s/OudqDff3QvmBqIiD74LrTw)
+
+#### [浏览器工作原理](https://github.com/yacan8/blog/issues/28)
