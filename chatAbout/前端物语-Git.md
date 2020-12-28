@@ -118,6 +118,9 @@ $ git tag -d [tag]
 
 # 删除远程tag，往往需要操作权限
 $ git push [remote] :refs/tags/[tagName]
+
+# 删除.git文件夹
+$ find . -name ".git" | xargs rm -Rf
 ```
 
 ### git reset、git revert 和 git checkout 的区别

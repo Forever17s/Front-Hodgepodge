@@ -69,7 +69,9 @@ fetch("coffee.jpg")
     document.body.appendChild(image);
   })
   .catch(e => {
-    console.log("There has been a problem with your fetch operation: " + e.message);
+    console.log(
+      "There has been a problem with your fetch operation: " + e.message
+    );
   });
 ```
 
@@ -209,13 +211,13 @@ console.log(Object.getOwnPropertyDescriptor(target2, "foo"));
 ```javascript
 // for of遍历
 function Gen(time) {
-  return new Promise(function(resolve, reject) {
-    setTimeout(function() {
+  return new Promise(function (resolve, reject) {
+    setTimeout(function () {
       resolve(time);
     }, time);
   });
 }
-(async function() {
+(async function () {
   let arr = [Gen(2000), Gen(100), Gen(3000)];
   for (let item of arr) {
     console.log(Date.now(), item.then(console.log));
@@ -233,13 +235,13 @@ function Gen(time) {
 
 ```javascript
 function Gen(time) {
-  return new Promise(function(resolve, reject) {
-    setTimeout(function() {
+  return new Promise(function (resolve, reject) {
+    setTimeout(function () {
       resolve(time);
     }, time);
   });
 }
-(async function() {
+(async function () {
   let arr = [Gen(2000), Gen(100), Gen(3000)];
   for await (let item of arr) {
     console.log(Date.now(), item);
@@ -447,7 +449,9 @@ const ageObj = {
   li: 23
 };
 
-const ageOver_16 = Object.fromEntries(Object.entries(ageObj).filter(([name, age]) => age > 16));
+const ageOver_16 = Object.fromEntries(
+  Object.entries(ageObj).filter(([name, age]) => age > 16)
+);
 
 console.log(ageOver_16); // {wang: 21, li: 23}
 ```
@@ -584,5 +588,7 @@ for (const link of document.querySelectorAll("nav > a")) {
   });
 }
 ```
+
+### 结语
 
 > 一个 ECMAScript 标准的制作过程，包含了 Stage 0 到 Stage 4 五个阶段。还有一些 ES10 的新特性（例如：类的私有变量、可选链操作符）处于 Stage 3 或者 Stage 4 阶段，都是实用性很强的应用，期待美好事情的发生 :santa:
