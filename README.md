@@ -149,6 +149,7 @@
 - MVVM 和 MVC 的区别
 - 五大浏览器和四大内核
 - 关于 npm 和 yarn
+- 关于 require 和 import
 
 #### [前端物语 - Git](./chatAbout/前端物语-Git.md)
 
