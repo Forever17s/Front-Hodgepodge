@@ -123,7 +123,7 @@
 - javascript 工厂模式函数、构造函数、原型模式
 - 关于 this 指向
 - 事件轮询机制 bind、apply、call 的区别
-- 手写 new、instanceOf、函数柯里化
+- 手写 new、instanceOf、函数柯里化、函数合成
 - 函数防抖、函数节流
 - 深度遍历
 - 广度遍历
