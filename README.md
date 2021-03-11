@@ -105,6 +105,7 @@
 - 有关 key
 - Vue 修饰符
 - Vue 关于 \$emit 的用法
+- Vue 的 v-model 是什么
 
 #### [前端进阶 - 乙篇](./interview/前端进阶-乙.md)
 
@@ -117,6 +118,7 @@
 - React 中 setState 更新数据
 - 对比 Redux 和 Vuex
 - Vue/React 的 diff 优化
+- 说说对 SSR 的了解
 
 #### [前端进阶 - 丙篇](./interview/前端进阶-丙.md)
 
