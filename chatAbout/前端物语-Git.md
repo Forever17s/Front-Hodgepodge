@@ -162,6 +162,16 @@ git 仓库的三个组成部分为：『 工作区 』 Working Directory、『 �
 - git revert 不支持文件层面的操作
 - 不要在公共分支做 git reset 操作
 
+### git fetch 和 git pull
+
+`git pull` = `git fetch` + `merge to local`
+
+`git pull`是相当于从远程仓库获取最新版本，然后再与本地分支`merge`（合并）。对应的 `gitFlow` 环节为：
+
+![](./../resource/interview_gitPull.png)
+
+> :warning:注意：git fetch 不会进行合并，执行后需要手动执行 git merge 合并，而 git pull 拉取远程分之后直接与本地分支进行合并。更准确地说，git pull 是使用给定的参数运行 git fetch，并调用 git merge 将检索到的分支头合并到当前分支中。
+
 ### 关于 git rebase
 
 > :warning:注意：不要通过 rebase 对任何已经提交到公共仓库中的 commit 进行修改（你自己一个人玩的分支除外）。
