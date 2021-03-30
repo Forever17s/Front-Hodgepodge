@@ -131,7 +131,7 @@ Webpack 的工作方式是：把你的项目当做一个整体，通过一个给
 
    ```javascript
    // Greeter.js
-   export default function() {
+   export default function () {
      var greet = document.createElement("div");
      greet.textContent = "Hi there and greetings!";
      return greet;
@@ -276,7 +276,7 @@ Loaders 需要单独安装并且需要在 webpack.config.js 中的 modules 关�
 ```javascript
 import { greetText } from "./config.json";
 
-export default function() {
+export default function () {
   var greet = document.createElement("div");
   greet.textContent = greetText;
   return greet;
@@ -342,3 +342,16 @@ entry: __dirname + "/app/main.jsx", // 已多次提及的唯一入口文件
 ```
 
 重新使用 npm run server，你应该可以在 localhost:8080 下看到与之前一样的内容，这说明 react 和 es6 被正常打包了。
+
+#### 分包策略
+
+在 `webpack` 打包过程中，经常出现` vendor.js`， `app.js` 单个文件较大的情况，这偏偏又是网页最先加载的文件，这就会使得加载时间过长，从而使得白屏时间过长，影响用户体验。所以我们需要有合理的分包策略。
+
+在 `Webapck4.x` 版本之前，我们都是使用 `CommonsChunkPlugin` 去做分离。`webpack 4` 最大的改动就是废除了 `CommonsChunkPlugin` 引入了 `optimization.splitChunks`。如果你的 `mode` 是 `production`，那么 `webpack4` 就会自动开启 `Code Splitting`。它内置的代码分割策略是这样的：
+
+- 新的 `chunk` 是否被共享或者是来自 `node_modules` 的模块
+- 新的 `chunk` 体积在压缩之前是否大于 `30kb`
+- 按需加载 `chunk` 的并发请求数量小于等于 `5` 个
+- 页面初始加载时的并发请求数量小于等于 `3` 个
+
+虽然在 `webpack4` 会自动开启 `Code Splitting`，但是随着项目工程的最大，这往往不能满足我们的需求，我们需要再进行个性化的优化。
