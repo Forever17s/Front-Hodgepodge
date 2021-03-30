@@ -44,6 +44,7 @@
 - `String` 字符串对象属性
 - `Window` 对象
 - `history` 修改 URL 的方法
+- `hash` 路由和 `history` 路由区别
 - 数组去重四种方式
 - CSS 元素隐藏显示
 - 排序
