@@ -121,6 +121,7 @@
 - React 中 setState 更新数据
 - 对比 Redux 和 Vuex
 - Vue/React 的 diff 优化
+- React v15 和 v16 比较
 - 说说对 SSR 的了解
 - Vue 3.X 新特性 :checkered_flag:
 
