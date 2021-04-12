@@ -283,6 +283,20 @@ export default function () {
 }
 ```
 
+#### Plugin
+
+`webpack` 整个构建流程有许多钩子，开发者可以在指定的阶段加入自己的行为到 `webpack` 构建流程中。插件由以下构成:
+
+- 一个 `JavaScript` 命名函数。
+- 在插件函数的 `prototype` 上定义一个 `apply` 方法。
+- 指定一个绑定到 `webpack` 自身的事件钩子。
+- 处理 `webpack` 内部实例的特定数据。
+- 功能完成后调用 `webpack` 提供的回调。
+
+整个 `webpack` 流程由 `compiler` 和 `compilation` 构成,`compiler` 只会创建一次，`compilation` 如果开起了 `watch` 文件变化，那么会多次生成 `compilation`. 那么这 2 个类下面生成了需要事件钩子
+
+[compiler hooks 文档 compilation hooks 文档](https://webpack.js.org/api/compiler-hooks/)
+
 #### Babel
 
 在看如何具体使用 loader 之前我们先看看 Babel 是什么？
