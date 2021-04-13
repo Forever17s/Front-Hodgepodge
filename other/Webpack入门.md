@@ -254,6 +254,25 @@ npm run server
 
 Loaders 是 webpack 提供的最激动人心的功能之一了。通过使用不同的 loader，webpack 有能力调用外部的脚本或工具，实现对不同格式的文件的处理，比如说分析转换 scss 为 css，或者把下一代的 JS 文件（ES6，ES7)转换为现代浏览器兼容的 JS 文件，对 React 的开发而言，合适的 Loaders 可以把 React 的中用到的 JSX 文件转换为 JS 文件。
 
+```javascript
+// webpack.config.js
+module.exports = {
+  module: {
+    rules: [
+      { test: /\.js$/, use: "babel-loader" },
+      {
+        test: /\.css$/,
+        use: [
+          { loader: "style-loader" },
+          { loader: "css-loader" },
+          { loader: "postcss-loader" }
+        ]
+      }
+    ]
+  }
+};
+```
+
 Loaders 需要单独安装并且需要在 webpack.config.js 中的 modules 关键字下进行配置，Loaders 的配置包括以下几方面：
 
 - test：一个用以匹配 loaders 所处理文件的拓展名的正则表达式（必须）
@@ -282,6 +301,23 @@ export default function () {
   return greet;
 }
 ```
+
+#### Loader api
+
+所谓 Loader，也只是一个符合 commonjs 规范的 node 模块，它会导出一个可执行函数。loader runner 会调用这个函数，将文件的内容或者上一个 Loader 处理的结果传递进去。同时，webpack 还为 Loader 提供了一个上下文 this，其中有很多有用的 api，我们找几个典型的来看看。
+
+- **this.context**: 当前处理文件的所在目录，假如当前 Loader 处理的文件是 `/src/main.js`，则 this.context 就等于 `/src`。
+- **this.resource**: 当前处理文件的完整请求路径，包括 querystring，例如 `/src/main.js?name=1`。
+- **this.resourcePath**: 当前处理文件的路径，例如 `/src/main.js`。
+- **this.resourceQuery**: 当前处理文件的 `querystring`。
+- **this.target**: 等于 Webpack 配置中的 `Target`
+- **this.loadModule**: 但 Loader 在处理一个文件时，如果依赖其它文件的处理结果才能得出当前文件的结果时， 就可以通过 - - - `this.loadModule(request: string, callback: function(err, source, sourceMap, module))` 去获得 `request` 对应文件的处理结果。
+- **this.resolve**: 像 require 语句一样获得指定文件的完整路径，使用方法为 r`esolve(context: string, request: string, callback: function(err, result: string))`。
+- **this.addDependency**: 给当前处理文件添加其依赖的文件，以便再其依赖的文件发生变化时，会重新调用 Loader 处理该文件。使用方法为 `addDependency(file: string)`。
+- **this.addContextDependency**: 和 addDependency 类似，但 addContextDependency 是把整个目录加入到当前正在处理文件的依赖中。使用方法为 `addContextDependency(directory: string)`。
+- **this.clearDependencies**: 清除当前正在处理文件的所有依赖，使用方法为 `clearDependencies()`。
+- **this.emitFile**: 输出一个文件，使用方法为 `emitFile(name: string, content: Buffer|string, sourceMap: {...})`。
+- **this.async**: 返回一个回调函数，用于异步执行。
 
 #### Plugin
 
