@@ -113,6 +113,7 @@
 #### [前端进阶 - 乙篇](./interview/前端进阶-乙.md)
 
 - Vue 父子组件通过 props 传值示例
+- Vue 父子组件生命周期执行顺序
 - Vue/React 组件间通信
 - Vue 2.X 源码之『 VNode 』:checkered_flag:
 - Vue 2.X 源码之『 响应式对象 』:checkered_flag:
