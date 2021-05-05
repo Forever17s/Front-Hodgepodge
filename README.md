@@ -231,6 +231,8 @@
 
 #### [移动端适配](./other/移动端适配.md)
 
+#### [算法-我的收藏](./other/算法-我的收藏.md)
+
 ### 分享
 
 #### [设计原则 - Ant Design](https://ant.design/docs/spec/proximity-cn)
