@@ -45,7 +45,6 @@
   "prettier.printWidth": 80,
   // 在对象或数组最后一个元素后面是不加逗号
   "prettier.trailingComma": "none",
-
   // git 管理
   "git.confirmSync": false,
   "git.autofetch": true,
@@ -70,7 +69,7 @@
   ],
   // 两个选择器中是否换行
   "diffEditor.ignoreTrimWhitespace": false,
-  // terminal默认使用zsh
+  // terminal默认使用zsh。我的ZSH_THEME="miloshadzic"
   "terminal.integrated.shell.osx": "/bin/zsh"
 }
 
