@@ -15,7 +15,10 @@
 - 备忘: `TODO Highlight`
 - 为 Vs Code 快捷生成 ES6 的语法（ js 和 ts 同时都支持）: `javascript (ES6) code snippets`
 - python 编码必备，自带检测和格式化工具: `python`
-- drawio 流程图绘制工具，命名 ` .drawio` 后缀使用
+- 流程图绘制工具，命名 ` .drawio` 后缀使用: `drawio`
+- 代码调试工具: `code runner`
+- 颜色识别工具: `color highlight`
+- 算法刷题必备: `leetcode`
 
 **`setting.json`文件配置：**
 
@@ -45,6 +48,12 @@
   "prettier.printWidth": 80,
   // 在对象或数组最后一个元素后面是不加逗号
   "prettier.trailingComma": "none",
+  // (x) => {} 箭头函数参数只有一个时是否要有小括号。avoid：省略括号
+  "prettier.arrowParens": "avoid",
+  // 不让prettier使用tslint的代码格式进行校验
+  "prettier.tslintIntegration": false,
+  // 不让prettier使用eslint的代码格式进行校验
+  "prettier.eslintIntegration": false,
   // git 管理
   "git.confirmSync": false,
   "git.autofetch": true,
