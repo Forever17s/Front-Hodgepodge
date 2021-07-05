@@ -245,28 +245,46 @@ git checkout master
 git merge feature1
 ```
 
-### Git 修改 commit message
+### Git 修改 commit
 
-1. 修改最近一次的 commit 信息
+1. 仅修改最近一次的 commit 信息
 
    ```bash
-   # 然后就会进入 vim 编辑模式
    git commit --amend
+   # 然后就会进入 vim 编辑模式，修改提交信息
+   git push
    ```
 
-2. 比如要修改的 commit 是倒数第三条，使用下述命令：
+2. 比如要修改的是倒数第三条 commit 信息
 
    ```bash
    git rebase -i HEAD~3
-   ```
-
-3. `:wq` 退出保存，然后提交更新
-
-   ```bash
+   # 然后就会进入 vim 编辑模式，修改提交信息
    git rebase --continue
    # 推送到服务端
    git push -f
    ```
+
+3. 修改最近一次的 commit 代码
+
+   ```bash
+   # 进行代码修改
+   git add .
+   git commit --amend
+   ```
+
+4. git reabse 修改已经 commit 的代码
+
+   ```bash
+   git rebase -i
+   # 进入vi，标记要修改的提交为 edit
+   # 进行代码修改
+   git add .
+   git commit --amend
+   git rebase --continue
+   ```
+
+:warning: 以上操作针对的是 commit 但没有 push 的提交 ！！
 
 ### Git 撤销已经推送至远端仓库的提交信息
 
