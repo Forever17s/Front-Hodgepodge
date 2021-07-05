@@ -15,6 +15,9 @@
 - 备忘: `TODO Highlight`
 - 为 Vs Code 快捷生成 ES6 的语法（ js 和 ts 同时都支持）: `javascript (ES6) code snippets`
 - python 编码必备，自带检测和格式化工具: `python`
+- angular 的交互式 UI 工具: `Nx Console`
+- angular 文件自动检测提示: `Angular Language Service`
+- angular 的标签、样式定位工具: `Angular Follow Selector`
 - 流程图绘制工具，命名 ` .drawio` 后缀使用: `drawio`
 - 代码调试工具: `code runner`
 - 颜色识别工具: `color highlight`
@@ -40,6 +43,10 @@
   },
   // 开启 vscode 文件路径导航
   "breadcrumbs.enabled": true,
+  // 采用 prettier 格式化
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
   // prettier 设置语句末尾加分号
   "prettier.semi": true,
   // prettier 设置强制单引号
