@@ -33,6 +33,8 @@
   "editor.wordWrap": "off",
   // 保存时格式化
   "editor.formatOnSave": true,
+  // 只格式化自己修改的内容
+  "editor.formatOnSaveMode": "modifications",
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": true
   },
