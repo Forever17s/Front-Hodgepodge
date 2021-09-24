@@ -156,10 +156,6 @@
 - 手写 Array.flat
 - 手写单例模式
 - 手写异步中间件
-- import 最后被解析成了什么
-- 函数式编程
-- PWA 简介
-- web worker 简介
 
 ---
 
@@ -180,6 +176,10 @@
 - 关于快数组、慢数组
 - 关于 npm 和 yarn
 - 关于 require 和 import
+- import 最后被解析成了什么
+- 函数式编程
+- PWA 简介
+- web worker 简介
 
 #### [前端物语 - Git](./chatAbout/前端物语-Git.md)
 
