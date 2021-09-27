@@ -255,3 +255,5 @@
 #### [浏览器工作原理](https://github.com/yacan8/blog/issues/28)
 
 #### [各种常见布局实现](https://juejin.cn/post/6844903574929932301)
+
+#### [可能是你见过最完善的微前端解决方案](https://zhuanlan.zhihu.com/p/78362028)
