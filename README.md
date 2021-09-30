@@ -120,6 +120,7 @@
 - Vue 2.X 源码之『 VNode 』:checkered_flag:
 - Vue 2.X 源码之『 响应式对象 』:checkered_flag:
 - Vue 2.X 源码之『 NextTick 』:checkered_flag:
+- Vue 2.X 的编译过程
 - macro/micro task 宏任务、微任务
 - React 中 setState 更新数据
 - 对比 Redux 和 Vuex
@@ -128,7 +129,6 @@
 - React v15 和 v16 比较
 - React Fiber 的设计理念:checkered_flag:
 - React hook
-- 说说对 SSR 的了解
 - Vue 3.X 新特性 :checkered_flag:
 
 #### [前端进阶 - 丙篇](./interview/前端进阶-丙.md)
@@ -181,6 +181,7 @@
 - 函数式编程
 - PWA 简介
 - web worker 简介
+- 说说对 SSR 的了解
 
 #### [前端物语 - Git](./chatAbout/前端物语-Git.md)
 
