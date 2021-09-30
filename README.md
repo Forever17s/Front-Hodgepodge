@@ -128,7 +128,8 @@
 - React diff 介绍:checkered_flag:
 - React v15 和 v16 比较
 - React Fiber 的设计理念:checkered_flag:
-- React hook
+- React hook 原理
+- React 性能优化
 - Vue 3.X 新特性 :checkered_flag:
 
 #### [前端进阶 - 丙篇](./interview/前端进阶-丙.md)
