@@ -235,7 +235,7 @@
 
 #### [移动端适配](./other/移动端适配.md)
 
-#### [算法-我的收藏](./other/算法-我的收藏.md)
+#### [qiankun 的特性总结](./other/qiankun的特性总结.md)
 
 ### 分享
 
@@ -256,5 +256,3 @@
 #### [浏览器工作原理](https://github.com/yacan8/blog/issues/28)
 
 #### [各种常见布局实现](https://juejin.cn/post/6844903574929932301)
-
-#### [可能是你见过最完善的微前端解决方案](https://zhuanlan.zhihu.com/p/78362028)
