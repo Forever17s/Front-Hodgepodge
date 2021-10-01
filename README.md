@@ -111,6 +111,7 @@
 - Vue 修饰符
 - Vue 关于 \$emit 的用法
 - Vue 的 v-model 是什么
+- Vue keep-alive 的实现原理及 LRU 缓存策略
 
 #### [前端进阶 - 乙篇](./interview/前端进阶-乙.md)
 
