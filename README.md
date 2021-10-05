@@ -79,7 +79,7 @@
 
 - 关于 Ref
 - 关于 Set 和 Map
-- 同源策略
+- 同源策略及解决跨域问题
 - CSS 的单位
 - CSS 中 white-space、word-break、word-wrap
 - CSS3 动画
