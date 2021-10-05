@@ -54,7 +54,7 @@ module.exports = {
 };
 ```
 
-#### 为什要使用 WebPack
+#### 为什要使用 Webpack
 
 现今的很多网页其实可以看做是功能丰富的应用，它们拥有着复杂的 JavaScript 代码和一大堆依赖包。为了简化开发的复杂度，前端社区涌现出了很多好的实践方法
 
@@ -65,11 +65,11 @@ module.exports = {
 
 这些改进确实大大的提高了我们的开发效率，但是利用它们开发的文件往往需要进行额外的处理才能让浏览器识别,而手动处理又是非常繁琐的。
 
-这就为 WebPack 类的工具的出现提供了需求，可以把它看做是模块打包机：它做的事情是，分析你的项目结构，找到 JavaScript 模块以及其它的一些浏览器不能直接运行的拓展语言（Scss，TypeScript 等），并将其转换和打包为合适的格式供浏览器使用。
+这就为 Webpack 类的工具的出现提供了需求，可以把它看做是模块打包机：它做的事情是，分析你的项目结构，找到 JavaScript 模块以及其它的一些浏览器不能直接运行的拓展语言（Scss，TypeScript 等），并将其转换和打包为合适的格式供浏览器使用。
 
-#### WebPack 和 Grunt 以及 Gulp 相比有什么特性
+#### Webpack 和 Grunt 以及 Gulp 相比有什么特性
 
-其实 Webpack 和另外两个并没有太多的可比性，Gulp/Grunt 是一种能够优化前端的开发流程的工具，而 WebPack 是一种模块化的解决方案，不过 Webpack 的优点使得 Webpack 在很多场景下可以替代 Gulp/Grunt 类的工具。
+其实 Webpack 和另外两个并没有太多的可比性，Gulp/Grunt 是一种能够优化前端的开发流程的工具，而 Webpack 是一种模块化的解决方案，不过 Webpack 的优点使得 Webpack 在很多场景下可以替代 Gulp/Grunt 类的工具。
 
 Grunt 和 Gulp 的工作方式是：在一个配置文件中，指明对某些文件进行类似编译，组合，压缩等任务的具体步骤，工具之后可以自动替你完成这些任务。
 
@@ -223,6 +223,7 @@ module.exports = {
   output: {
     path: __dirname + "/public", // 打包后的文件存放的地方
     filename: "bundle.js" // 打包后输出文件的文件名
+    libraryTarget: 'umd', // 暴露为一个变量
   },
   devtool: "eval-source-map",
 
@@ -249,6 +250,20 @@ module.exports = {
 ```bash
 npm run server
 ```
+
+#### 关于 libraryTarget 的使用
+
+| 配置      | 作用                                | 备注                                                                                         |
+| :-------- | :---------------------------------- | :------------------------------------------------------------------------------------------- |
+| var       | 分配给一个变量                      | 只能在 browser 环境                                                                          |
+| assign    | 产生一个隐形的变量                  | 只能在 browser 环境                                                                          |
+| this      | 分配给 this 的一个属性              | 可以在浏览器环境、node 环境                                                                  |
+| widow     | 分配给 window 一个属性              | 在 browser 环境                                                                              |
+| global    | 分配给 global 一个属性              | 在 node 环境中使用需要设置 target 为 node 保证在 node 环境中，不然还是会设置在 window 对象上 |
+| commonjs  | 分配给 exports 一个属性             | 用于 CommonJS 环境                                                                           |
+| commonjs2 | 分配给 module.exports 一个属性      | 用于 CommonJS 环境，output library 会被忽略                                                  |
+| amd       | 将 library 暴露为一个 AMD 模块      | node 环境无法使用                                                                            |
+| umd       | 保证 library 在全部环境中都可以使用 | 如果要 node 和 browser 必须额外设置 umdNameDefine.globalObject 了                            |
 
 #### Loaders
 
