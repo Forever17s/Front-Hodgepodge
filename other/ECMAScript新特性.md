@@ -33,11 +33,11 @@ arr.includes(+0); // true
   数组实例的 `find` 方法，用于找出第一个符合条件的数组成员。另外，这两个方法都可以发现 `NaN`，弥补了数组的 `indexOf` 方法的不足。
 
   ```javascript
-  [1, 4, -5, 10].find(n => n < 0); // -5
+  [1, 4, -5, 10].find((n) => n < 0); // -5
 
-  [1, 5, 10, 15].findIndex(n => n > 9); // 2
+  [1, 5, 10, 15].findIndex((n) => n > 9); // 2
 
-  [NaN].findIndex(y => Object.is(NaN, y)); // 0
+  [NaN].findIndex((y) => Object.is(NaN, y)); // 0
   ```
 
 #### 求幂运算符『 \*\* 』
@@ -61,14 +61,14 @@ console.log(Math.pow(2, 10)); // 1024
 
 ```javascript
 fetch("coffee.jpg")
-  .then(response => response.blob())
-  .then(myBlob => {
+  .then((response) => response.blob())
+  .then((myBlob) => {
     let objectURL = URL.createObjectURL(myBlob);
     let image = document.createElement("img");
     image.src = objectURL;
     document.body.appendChild(image);
   })
-  .catch(e => {
+  .catch((e) => {
     console.log(
       "There has been a problem with your fetch operation: " + e.message
     );
@@ -277,10 +277,10 @@ var mergedObj = { ...obj1, ...obj2 };
 
 ```javascript
 fetch("https://www.google.com")
-  .then(response => {
+  .then((response) => {
     console.log(response.status);
   })
-  .catch(error => {
+  .catch((error) => {
     console.log(error);
   })
   .finally(() => {
@@ -433,8 +433,8 @@ console.log(numbers3.flat(Infinity)); // [1, 2, 3, 4, 5, 6]
 
 ```javascript
 const arr = [1, 2, 3];
-console.log(arr.map(item => [item * 2]).flat()); // [2, 4, 6]
-console.log(arr.flatMap(item => [item * 2])); // [2, 4, 6]
+console.log(arr.map((item) => [item * 2]).flat()); // [2, 4, 6]
+console.log(arr.flatMap((item) => [item * 2])); // [2, 4, 6]
 ```
 
 #### Object.fromEntries()
@@ -527,7 +527,7 @@ try {
 
 #### BigInt
 
-`BigInt` 是一种内置对象，它提供了一种方法来表示大于 `253 - 1` 的整数。这原本是 `Javascript` 中可以用 `Number` 表示的最大数字。`BigInt` 可以表示任意大的整数。
+`BigInt` 是一种内置对象，它提供了一种方法来表示大于 `2 ** 53 - 1` 的整数。这原本是 `Javascript` 中可以用 `Number` 表示的最大数字。`BigInt` 可以表示任意大的整数。
 
 可以用在一个整数字面量后面加 `n` 的方式定义一个 `BigInt` ，如：`10n`，或者调用函数`BigInt()`。
 
@@ -548,13 +548,14 @@ try {
 
 `BigInt` 和 `Number`不是严格相等的，但是宽松相等的。
 
-所以在`BigInt`出来以后，JS 的原始类型便增加到了**7**个，如下：
+所以在`BigInt`出来以后，JS 的原始类型便增加到了** 8 **个，如下：
 
 - Boolean
-- Null
+- Object
 - Undefined
 - Number
 - String
+- Function
 - Symbol (ES6)
 - BigInt (ES10)
 
@@ -575,14 +576,14 @@ globalThis === this; // true
 ```javascript
 const main = document.querySelector("main");
 for (const link of document.querySelectorAll("nav > a")) {
-  link.addEventListener("click", e => {
+  link.addEventListener("click", (e) => {
     e.preventDefault();
 
     import("/modules/my-module.js")
-      .then(module => {
+      .then((module) => {
         module.loadPageInto(main);
       })
-      .catch(err => {
+      .catch((err) => {
         main.textContent = err.message;
       });
   });
