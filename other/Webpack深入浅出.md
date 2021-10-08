@@ -317,7 +317,7 @@ export default function () {
 }
 ```
 
-#### Loader api
+##### Loader api
 
 所谓 Loader，也只是一个符合 commonjs 规范的 node 模块，它会导出一个可执行函数。loader runner 会调用这个函数，将文件的内容或者上一个 Loader 处理的结果传递进去。同时，webpack 还为 Loader 提供了一个上下文 this，其中有很多有用的 api，我们找几个典型的来看看。
 
@@ -325,7 +325,7 @@ export default function () {
 - **this.resource**: 当前处理文件的完整请求路径，包括 querystring，例如 `/src/main.js?name=1`。
 - **this.resourcePath**: 当前处理文件的路径，例如 `/src/main.js`。
 - **this.resourceQuery**: 当前处理文件的 `querystring`。
-- **this.target**: 等于 Webpack 配置中的 `Target`
+- **this.target**: 等于 Webpack 配置中的 `Target`\
 - **this.loadModule**: 但 Loader 在处理一个文件时，如果依赖其它文件的处理结果才能得出当前文件的结果时， 就可以通过 - - - `this.loadModule(request: string, callback: function(err, source, sourceMap, module))` 去获得 `request` 对应文件的处理结果。
 - **this.resolve**: 像 require 语句一样获得指定文件的完整路径，使用方法为 r`esolve(context: string, request: string, callback: function(err, result: string))`。
 - **this.addDependency**: 给当前处理文件添加其依赖的文件，以便再其依赖的文件发生变化时，会重新调用 Loader 处理该文件。使用方法为 `addDependency(file: string)`。
@@ -334,21 +334,29 @@ export default function () {
 - **this.emitFile**: 输出一个文件，使用方法为 `emitFile(name: string, content: Buffer|string, sourceMap: {...})`。
 - **this.async**: 返回一个回调函数，用于异步执行。
 
-#### Plugin
+##### 常用 loader
 
-`webpack` 整个构建流程有许多钩子，开发者可以在指定的阶段加入自己的行为到 `webpack` 构建流程中。插件由以下构成:
+- **加载 scc**
 
-- 一个 `JavaScript` 命名函数。
-- 在插件函数的 `prototype` 上定义一个 `apply` 方法。
-- 指定一个绑定到 `webpack` 自身的事件钩子。
-- 处理 `webpack` 内部实例的特定数据。
-- 功能完成后调用 `webpack` 提供的回调。
+  `style-loader`、`css-loader`、`less-loader`、`sass-loader`
 
-整个 `webpack` 流程由 `compiler` 和 `compilation` 构成,`compiler` 只会创建一次，`compilation` 如果开起了 `watch` 文件变化，那么会多次生成 `compilation`. 那么这 2 个类下面生成了需要事件钩子
+- **加载图片和字体等文件**
 
-[compiler hooks 文档 compilation hooks 文档](https://webpack.js.org/api/compiler-hooks/)
+  `file-loader`、`url-loader`
 
-#### Babel
+- **加载数据**（打包加载解析 csv 和 xml 文件数据）
+
+  `csv-loader`、`xml-loader`
+
+- **校验测试**
+
+  `mocah-loader`、`jshint-loader`、`eslint-loader`
+
+- **编译**
+
+  `babel-loader`、`ts-loader`
+
+##### Babel
 
 在看如何具体使用 loader 之前我们先看看 Babel 是什么？
 
@@ -407,6 +415,35 @@ entry: __dirname + "/app/main.jsx", // 已多次提及的唯一入口文件
 ```
 
 重新使用 npm run server，你应该可以在 localhost:8080 下看到与之前一样的内容，这说明 react 和 es6 被正常打包了。
+
+#### Plugin
+
+`webpack` 整个构建流程有许多钩子，开发者可以在指定的阶段加入自己的行为到 `webpack` 构建流程中。插件由以下构成:
+
+- 一个 `JavaScript` 命名函数。
+- 在插件函数的 `prototype` 上定义一个 `apply` 方法。
+- 指定一个绑定到 `webpack` 自身的事件钩子。
+- 处理 `webpack` 内部实例的特定数据。
+- 功能完成后调用 `webpack` 提供的回调。
+
+整个 `webpack` 流程由 `compiler` 和 `compilation` 构成,`compiler` 只会创建一次，`compilation` 如果开起了 `watch` 文件变化，那么会多次生成 `compilation`. 那么这 2 个类下面生成了需要事件钩子
+
+[compiler hooks 文档 compilation hooks 文档](https://webpack.js.org/api/compiler-hooks/)
+
+##### 常用 plugin
+
+- **happypack**：通过多进程模型，来加速代码构建
+- **clean-webpack-plugin**：清理每次打包下没用使用的文件
+- **UglifyJsPlugin**：压缩 JS
+- **CommonsChunkPlugin**：多个 html 公用一个 js 文件
+- **HotModuleReplacementPlugin**：热更新
+- **html-webpack-plugin**：可以根据模板自动生成 html 代码，并自动引用 css 和 js 文件
+- **webpack-bundle-analyzer**：一个 webpack 的 bundle 文件分析工具
+- **ProvidePlugin**：自动加载模块，代替 require 和 import
+- **extract-text-webpack-plugin**：将 js 文件中的引用样式单独抽离成 css 文件
+- **DefinePlugin**：编辑时配置全局变量，这对开发模式和发布模式的构建允许不同的行为非常有用
+- **optimize-css-assets-webpack-plugin**：不同组件中的重复 css 可以快速去重
+- **compress-webpack-plugin**：生产环境可采用 gzip 压缩 JS 和 CSS
 
 #### 分包策略
 
