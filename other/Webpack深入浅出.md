@@ -265,6 +265,32 @@ npm run server
 | amd       | 将 library 暴露为一个 AMD 模块      | node 环境无法使用                                                                            |
 | umd       | 保证 library 在全部环境中都可以使用 | 如果要 node 和 browser 必须额外设置 umdNameDefine.globalObject 了                            |
 
+#### 工作原理
+
+##### 基本概念
+
+在了解 `Webpack` 原理前，需要掌握以下几个核心概念：
+
+- **Entry**：入口，`Webpack` 执行构建的第一步将从 `Entry` 开始，可抽象成输入。
+- **Module**：模块，在 `Webpack` 里一切皆为模块，一个模块对应着一个文件。`Webpack` 会从配置的 `Entry` 开始递归找出所有依赖的模块。
+- **Chunk**：代码块，一个 `Chunk` 由多个模块组合而成，用于代码合并和分割。
+- **Loader**：模块转换器，用于将模块原内容按照需求转化为新内容。
+- **Plugin**：扩展插件，在 `Webpack` 构建流程中的特定时机会广播出对应的事件，插件可以监听这些事件的发生，在特定时机做对应的事件。
+
+##### 流程概况
+
+`Webpack` 的运行流程是一个串行的过程，从启动到结束会依次执行以下流程：
+
+1.  **初始化参数**：从配置文件和 `Shell` 语句中读取、合并得出最终参数。
+2.  **开始编译**：用上一步得到的参数初始化 `Compiler` 对象，加载所有配置的 `Plugin` ，执行对象的 `run` 方法开始执行编译。
+3.  **确定入口**：根据配置中的 entry 找出入口文件。
+4.  **编译模块**：从入口文件触发，调用所有配置的 `Loader` 对模块代码进行改造，再递归本步骤对依赖的模块进行处理。
+5.  **完成模块编译**：第 `4` 步执行完成之后，得到每个模块被改造的最终内容及他们之间的依赖关系。
+6.  **输出资源**：根据入口和模块间依赖关系，组装成一个个包含多个模块的 `Chunk` ，再把每个 `Chunk` 转换成一个单独的文件加到输出列表，这里是可以修改输出内容的最后机会。
+7.  **输出完成**：确定好输出内容后，根据配置确定输出的路径和文件名，把文件写入到文件系统。
+
+在以上过程中， `Webpack` 会在特定的时间点广播事件， `Plugin` 在监听到这些事件后会执行特定的 `API` ，并且可以在 `API` 中改变 `Webpack` 的编译内容。
+
 #### Loaders
 
 Loaders 是 webpack 提供的最激动人心的功能之一了。通过使用不同的 loader，webpack 有能力调用外部的脚本或工具，实现对不同格式的文件的处理，比如说分析转换 scss 为 css，或者把下一代的 JS 文件（ES6，ES7)转换为现代浏览器兼容的 JS 文件，对 React 的开发而言，合适的 Loaders 可以把 React 的中用到的 JSX 文件转换为 JS 文件。
@@ -418,13 +444,44 @@ entry: __dirname + "/app/main.jsx", // 已多次提及的唯一入口文件
 
 #### Plugin
 
-`webpack` 整个构建流程有许多钩子，开发者可以在指定的阶段加入自己的行为到 `webpack` 构建流程中。插件由以下构成:
+`webpack` 整个构建流程有许多钩子，`Plugin` 可以监听这些钩子，在合适的时机通过 `Webpack` 提供的 `API` 改变输出结果达到修改输出文件、增加输出文件、甚至可以提升 `Webpack` 性能的目的。一个插件由以下部分构成:
 
 - 一个 `JavaScript` 命名函数。
 - 在插件函数的 `prototype` 上定义一个 `apply` 方法。
 - 指定一个绑定到 `webpack` 自身的事件钩子。
 - 处理 `webpack` 内部实例的特定数据。
 - 功能完成后调用 `webpack` 提供的回调。
+
+一个最基础的 Plugin 的代码是这样的：
+
+```js
+class BasicPlugin {
+  constructor(options) {
+    // 在构造函数中获取用户设置的配置
+    this.options = options;
+  }
+
+  // Webpack 会调用 BasicPlugin 实例的 apply 方法给插件实例传入 compiler 对象
+  apply(compiler) {
+    compiler.plugin("compilation", compilationCallback);
+    compiler.plugin("done", doneCallback);
+    compiler.plugin("failed", faildCallback);
+  }
+
+  const compilationCallback = (compilation) => {
+    // Compilation 对象包含了当前的模块资源、编译生成资源、变化的文件等
+  };
+
+  const doneCallback = (stats) => {
+    // 在 done 事件中回调 doneCallback
+  };
+
+  const faildCallback = (err) => {
+    // 在 failed 事件中回调 failCallback
+  };
+}
+module.exports = BasicPlugin; // 导出 Plugin
+```
 
 整个 `webpack` 流程由 `compiler` 和 `compilation` 构成,`compiler` 只会创建一次，`compilation` 如果开起了 `watch` 文件变化，那么会多次生成 `compilation`. 那么这 2 个类下面生成了需要事件钩子
 
