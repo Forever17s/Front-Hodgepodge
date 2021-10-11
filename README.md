@@ -187,6 +187,7 @@
 - PWA 简介
 - web worker 简介
 - 说说对 SSR 的了解
+- 跨标签页的通信方式
 
 #### [前端物语 - Git](./chatAbout/前端物语-Git.md)
 
