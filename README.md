@@ -246,6 +246,8 @@
 
 #### [H5 游戏开发的引擎 Egret vs Cocos-2d](./other/Egret对比Cocos-2d.md)
 
+#### [Webpack、Rollup、Parcel 对比](./other/Webpack、Rollup、Parcel对比.md)
+
 ### 分享
 
 #### [设计原则 - Ant Design](https://ant.design/docs/spec/proximity-cn)
