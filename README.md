@@ -158,7 +158,7 @@
 - 如何避免内存泄露
 - 闭包会不会导致内存泄露
 - weakMap weakSet 和 Map Set 的区别
-- 手写 Array.flat
+- 手写 Array.flat、Array.reduce、Array.map
 - 手写单例模式
 - 手写异步中间件
 - 手写一个 redux
