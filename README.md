@@ -170,6 +170,7 @@
 - 前端登录需要处理的流程
 - HTTP 缓存机制
 - HTTP 常见状态码
+- OPTIONS 请求
 - 常见 HTTP 的 Header
 - 关于 HTTPS 的安全性
 - 第一方 cookie 和第三方 cookie
