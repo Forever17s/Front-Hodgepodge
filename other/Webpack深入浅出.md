@@ -514,3 +514,12 @@ module.exports = BasicPlugin; // 导出 Plugin
 - 页面初始加载时的并发请求数量小于等于 `3` 个
 
 虽然在 `webpack4` 会自动开启 `Code Splitting`，但是随着项目工程的最大，这往往不能满足我们的需求，我们需要再进行个性化的优化。
+
+#### 常用优化
+
+- **多核**：`happpack`
+- **压缩**：JS、CSS、图片压缩
+- **缩小构建目标**：通过设置` exclude: /node_modules/` 排查不需要构建的文件
+- **缓存**：使用 `babel-loader` 的时候，可以通过设置 `cacheDirectory` 来开启缓存。或者直接引入 `cache-loader`。
+- **抽离静态依赖包**：配置 `Externals` 将 `lodash` 等不需要打包的静态资源从构建逻辑中剔除出去，使用 `CDN` 引入。（或者使用 `DllPlugin` 插件）
+- **代码拆分**：`splitChunksPlugin`
