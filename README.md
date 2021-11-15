@@ -58,6 +58,7 @@
 
 - Object.assign()
 - ES6 新特性
+- 箭头函数普通函数区别
 - axios 特色
 - Vue 生命周期和钩子函数
 - addEventListener 监听函数
